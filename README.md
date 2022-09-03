@@ -40,3 +40,43 @@ We are deploying to the Permaweb via Arweave, Bundlr, and arkb (see https://docs
 # 3. Inside of the `frontend` package execute
 pnpm run deploy
 ```
+
+
+
+
+
+
+## Devpost Description 
+
+## What it does
+
+The **azero-domains** dapp creates decentralized domains as NFTs on the Aleph Zero testnet. The frontend interacting with the smart contracts is deployed on the Arweave network for maximum censorship resistance. The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is still available with the search function. If yes, he can purchase & claim the domain in just one click. 
+
+
+## How we built it
+
+Frontend: 
+Dennis :
+
+## Challenges we ran into
+- Polkadot JS Implementation --> its weird
+-  
+
+## Accomplishments that we're proud of
+- 
+## What we learned
+- How to write smart contracts with Ink! in Rust
+
+## What's next for Azero Domains
+
+- integrating the following features:
+- marketplace?
+- trading of domains
+- NFT connection
+
+Tech:
+- mainnet deployment
+- upgradable smart contracts
+- 
+
+

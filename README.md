@@ -72,8 +72,8 @@ We used the ink! eDSL by Parity for Substrate-compatible smart contracts. Since 
 
 ## Challenges we ran into
 
-- Polkadot JS Implementation --> its weird
-- Polkadot JS and UI is not ready for SSR
+- As stated above, we ran into multiple issues related to `polkadot.js` not being ready for server-side frameworks (i.e. `Next.js`). After quite some time we found a workaround by dynamically importing `@polkadot/extension-dapp` whenever we do contract interactions on the client side. In our opinion this either should be fixed on the `polkadot.js` side, or by a simple wrapper package that makes it work for others with a single import.
+- Then, we had some initial struggles with deploying our static bundle to the Arweave Permaweb. But with the help of Sophie and users from their discord, we figured out that import urls should be dynamic instead of static. And this can be done by adding `assetPrefix: './'` in the config.
 
 ## Accomplishments that we're proud of
 

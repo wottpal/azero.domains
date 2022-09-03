@@ -10,7 +10,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        gray: colors.zinc,
         social: {
           twitter: '#1DA1F2',
           discord: '#EB459E',

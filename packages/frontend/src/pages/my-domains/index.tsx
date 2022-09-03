@@ -69,7 +69,7 @@ const MyDomains: NextPage = () => {
       <h1 className="pb-12 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content">
         Domain Overview
       </h1>
-      <Table className=" rounded">
+      <Table className="rounded">
         <Table.Head className="bg-primary/70">
           <span />
           <span>Domains</span>
@@ -79,7 +79,7 @@ const MyDomains: NextPage = () => {
         <Table.Body>
           {myDomains.map((domain, index) => (
             <Table.Row className="bg-base-200" key={`${index}-${domain}`} hover>
-              <span>{index + 1}</span>
+              <span>#{index + 1}</span>
               <span>{domain}</span>
               <span>
                 <div className="flex space-x-4">

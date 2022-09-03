@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0xddd08eda6b3462f2112152b78aa896632711e3d9b0673c805740df80214e28c5",
+    "hash": "0x8daa458fb9dbbfbbc3f1040b59e9f05e3dc001a38b2f282160facc8c3509c7a2",
     "language": "ink! 3.3.1",
     "compiler": "rustc 1.65.0-nightly"
   },
@@ -13,7 +13,15 @@
     "spec": {
       "constructors": [
         {
-          "args": [],
+          "args": [
+            {
+              "label": "fee",
+              "type": {
+                "displayName": ["Option"],
+                "type": 9
+              }
+            }
+          ],
           "docs": ["Creates a new domain name service contract."],
           "label": "new",
           "payable": false,
@@ -38,7 +46,7 @@
               "indexed": true,
               "label": "from",
               "type": {
-                "displayName": ["AccountId"],
+                "displayName": ["ink_env", "AccountId"],
                 "type": 2
               }
             }
@@ -62,7 +70,7 @@
               "indexed": true,
               "label": "from",
               "type": {
-                "displayName": ["AccountId"],
+                "displayName": ["ink_env", "AccountId"],
                 "type": 2
               }
             }
@@ -86,7 +94,7 @@
               "indexed": false,
               "label": "from",
               "type": {
-                "displayName": ["AccountId"],
+                "displayName": ["ink_env", "AccountId"],
                 "type": 2
               }
             },
@@ -96,7 +104,7 @@
               "label": "old_address",
               "type": {
                 "displayName": ["Option"],
-                "type": 9
+                "type": 14
               }
             },
             {
@@ -104,7 +112,7 @@
               "indexed": true,
               "label": "new_address",
               "type": {
-                "displayName": ["AccountId"],
+                "displayName": ["ink_env", "AccountId"],
                 "type": 2
               }
             }
@@ -128,7 +136,7 @@
               "indexed": false,
               "label": "from",
               "type": {
-                "displayName": ["AccountId"],
+                "displayName": ["ink_env", "AccountId"],
                 "type": 2
               }
             },
@@ -138,7 +146,7 @@
               "label": "old_owner",
               "type": {
                 "displayName": ["Option"],
-                "type": 9
+                "type": 14
               }
             },
             {
@@ -146,7 +154,7 @@
               "indexed": true,
               "label": "new_owner",
               "type": {
-                "displayName": ["AccountId"],
+                "displayName": ["ink_env", "AccountId"],
                 "type": 2
               }
             }
@@ -169,10 +177,10 @@
           "docs": [" Register specific name with caller as owner."],
           "label": "register",
           "mutates": true,
-          "payable": false,
+          "payable": true,
           "returnType": {
             "displayName": ["Result"],
-            "type": 6
+            "type": 10
           },
           "selector": "0x229b553f"
         },
@@ -192,7 +200,7 @@
           "payable": false,
           "returnType": {
             "displayName": ["Result"],
-            "type": 6
+            "type": 10
           },
           "selector": "0x3f2be152"
         },
@@ -208,7 +216,7 @@
             {
               "label": "new_address",
               "type": {
-                "displayName": ["AccountId"],
+                "displayName": ["ink_env", "AccountId"],
                 "type": 2
               }
             }
@@ -219,7 +227,7 @@
           "payable": false,
           "returnType": {
             "displayName": ["Result"],
-            "type": 6
+            "type": 10
           },
           "selector": "0xb8a4d3d9"
         },
@@ -235,7 +243,7 @@
             {
               "label": "to",
               "type": {
-                "displayName": ["AccountId"],
+                "displayName": ["ink_env", "AccountId"],
                 "type": 2
               }
             }
@@ -246,7 +254,7 @@
           "payable": false,
           "returnType": {
             "displayName": ["Result"],
-            "type": 6
+            "type": 10
           },
           "selector": "0x84a15da1"
         },
@@ -265,7 +273,7 @@
           "mutates": false,
           "payable": false,
           "returnType": {
-            "displayName": ["AccountId"],
+            "displayName": ["ink_env", "AccountId"],
             "type": 2
           },
           "selector": "0xd259f7ba"
@@ -285,10 +293,30 @@
           "mutates": false,
           "payable": false,
           "returnType": {
-            "displayName": ["AccountId"],
+            "displayName": ["ink_env", "AccountId"],
             "type": 2
           },
           "selector": "0x07fcd0b1"
+        },
+        {
+          "args": [
+            {
+              "label": "owner",
+              "type": {
+                "displayName": ["ink_env", "AccountId"],
+                "type": 2
+              }
+            }
+          ],
+          "docs": [" Returns all names the address owns"],
+          "label": "get_names_of_address",
+          "mutates": false,
+          "payable": false,
+          "returnType": {
+            "displayName": ["Option"],
+            "type": 13
+          },
+          "selector": "0xf82caf60"
         }
       ]
     },
@@ -321,6 +349,24 @@
               }
             },
             "name": "default_address"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
+                "ty": 6
+              }
+            },
+            "name": "fee"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+                "ty": 7
+              }
+            },
+            "name": "owner_to_names"
           }
         ]
       }
@@ -416,12 +462,88 @@
         "id": 6,
         "type": {
           "def": {
+            "primitive": "u128"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "type": {
+          "def": {
+            "composite": {
+              "fields": [
+                {
+                  "name": "offset_key",
+                  "type": 5,
+                  "typeName": "Key"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "K",
+              "type": 2
+            },
+            {
+              "name": "V",
+              "type": 8
+            }
+          ],
+          "path": ["ink_storage", "lazy", "mapping", "Mapping"]
+        }
+      },
+      {
+        "id": 8,
+        "type": {
+          "def": {
+            "sequence": {
+              "type": 1
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 6
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 6
+            }
+          ],
+          "path": ["Option"]
+        }
+      },
+      {
+        "id": 10,
+        "type": {
+          "def": {
             "variant": {
               "variants": [
                 {
                   "fields": [
                     {
-                      "type": 7
+                      "type": 11
                     }
                   ],
                   "index": 0,
@@ -430,7 +552,7 @@
                 {
                   "fields": [
                     {
-                      "type": 8
+                      "type": 12
                     }
                   ],
                   "index": 1,
@@ -442,18 +564,18 @@
           "params": [
             {
               "name": "T",
-              "type": 7
+              "type": 11
             },
             {
               "name": "E",
-              "type": 8
+              "type": 12
             }
           ],
           "path": ["Result"]
         }
       },
       {
-        "id": 7,
+        "id": 11,
         "type": {
           "def": {
             "tuple": []
@@ -461,7 +583,7 @@
         }
       },
       {
-        "id": 8,
+        "id": 12,
         "type": {
           "def": {
             "variant": {
@@ -473,6 +595,14 @@
                 {
                   "index": 1,
                   "name": "CallerIsNotOwner"
+                },
+                {
+                  "index": 2,
+                  "name": "FeeNotPaid"
+                },
+                {
+                  "index": 3,
+                  "name": "NameEmpty"
                 }
               ]
             }
@@ -481,7 +611,38 @@
         }
       },
       {
-        "id": 9,
+        "id": 13,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 8
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 8
+            }
+          ],
+          "path": ["Option"]
+        }
+      },
+      {
+        "id": 14,
         "type": {
           "def": {
             "variant": {

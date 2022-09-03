@@ -41,11 +41,14 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown> */}
-            <img className="h-14 w-14 mr-2" src={aznsLogoTransparent.src} alt="AZNS Logo" />
-            <Link href={'/'}>
-              <a className="text-xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content">
-                AZERO DOMAINS
-              </a>
+
+            <Link passHref href={'/'}>
+              <div className="flex cursor-pointer items-center justify-center">
+                <img className="h-14 w-14 mr-2" src={aznsLogoTransparent.src} alt="AZNS Logo" />
+                <a className="text-xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content">
+                  AZERO DOMAINS
+                </a>
+              </div>
             </Link>
           </Navbar.Start>
           <Navbar.Center className="hidden lg:flex">

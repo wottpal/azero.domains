@@ -5,7 +5,7 @@ import { ContractPromise } from '@polkadot/api-contract'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { Button, Table } from 'react-daisyui'
+import { Table } from 'react-daisyui'
 import { deployments } from 'src/deployments'
 
 const MyDomains: NextPage = () => {
@@ -86,9 +86,7 @@ const MyDomains: NextPage = () => {
                   <Link href={`my-domains/${domain}`}>
                     <a className="btn btn-sm">Manage</a>
                   </Link>
-                  <Button color="error" size="sm">
-                    Release Domain
-                  </Button>
+                  <button className="btn btn-error btn-sm text-base-content">Release Domain</button>
                 </div>
               </span>
             </Table.Row>

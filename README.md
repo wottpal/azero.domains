@@ -61,7 +61,10 @@ The user journey with the Azero Domains app is as follows. First, the user check
 
 ### Frontend
 
-The frontend is written in Typescript with `Next.js` used as the framework, and `tailwindcss` as well as `daisyUI` for styling. For the contract interactions we use `polkadot.js` which unfortunately isn't ready for server-side rendered frameworks (see _Challenges we ran into_). For the deployment, we statically export the Next.js app and then upload it to the Arweave Permaweb via `arkb` & `bundlr`.
+For the frontend we used `Next.js` as a framework, with its many production ready features like filesystem-based routing and the possiblity to easily export
+
+Frontend:
+Dennis :
 
 ### Contracts
 
@@ -95,14 +98,17 @@ We used the ink! eDSL by Parity for Substrate-compatible smart contracts. Since 
 
 ## What's next for Azero Domains
 
-After the successfull testnet deplyoment during the hackathon, we are awaiting the samrt contract mainnet deployment by the Aleph Zero team to ship azero.domains on to mainnet with.
+After the successfull testnet deplyoment during the hackathon, we are awaiting the smart contract mainnet deployment by the Aleph Zero team to ship azero.domains to mainnet. Until then, we will be focussing on creating awareness, creating a community around the project and attracting testnet users to collect feedback and improve the user experience. Further, we will be exploring the feasibility of adding additional features to our dapp to increase the overall utility. Creating a DAO for a decentralized governance and an on-chain governed treasury fueled by revenues from royalties to fund public goods and ecosystem development is also a feasable option for the future.
 
-- integrating the following features:
-- marketplace?
-- trading of domains
-- NFT-compatiblity
+Potential future features could include:
 
-Tech:
+- NFT implementation of domain and visual implementation via permeweb by Arweave
+- Feature-rich marketplace with fixed asked price, auctions, dutch auctions and bundled transactions
+- Wallet features and direct domain-to-domain transactions
+- Contact book for further increase in UX and convenience
 
-- mainnet deployment
-- upgradable smart contracts
+Potential future tech improvements:
+
+- Mainnet deployment
+- Upgradable smart contracts
+- Mobile optimized version

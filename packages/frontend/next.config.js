@@ -6,7 +6,7 @@
  **/
 const nextConfig = {
   trailingSlash: true,
-  assetPrefix: './',
+  ...(process?.env?.NEXT_PUBLIC_PRODUCTION_MODE === 'true' ? { assetPrefix: './' } : {}),
 }
 
 module.exports = nextConfig

@@ -1,6 +1,7 @@
+import { ConnectWallet } from '@components/ConnectWallet'
 import Link from 'next/link'
 import { FC, PropsWithChildren } from 'react'
-import { Button, Menu, Navbar } from 'react-daisyui'
+import { Menu, Navbar } from 'react-daisyui'
 
 export const Navigation: FC<PropsWithChildren> = ({ children }) => {
   return (
@@ -53,10 +54,15 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
                   <a>My Domains</a>
                 </Link>
               </Menu.Item>
+              <Menu.Item>
+                <Link href="/substrate">
+                  <a>Test</a>
+                </Link>
+              </Menu.Item>
             </Menu>
           </Navbar.Center>
           <Navbar.End>
-            <Button color="primary">Connect Walllet</Button>
+            <ConnectWallet />
           </Navbar.End>
         </Navbar>
       </div>

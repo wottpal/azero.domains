@@ -29,7 +29,6 @@ const SearchDomains: NextPage = () => {
   return (
     <>
       <Hero>
-        <Hero.Overlay className="bg-opacity-60" />
         <Hero.Content className="text-center">
           <div className="max-w-2xl">
             <h1 className="text-5xl font-bold">

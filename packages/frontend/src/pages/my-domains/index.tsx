@@ -37,7 +37,7 @@ const MyDomains: NextPage = () => {
               <span>{domain.address}</span>
               <span>
                 <div className="flex space-x-4">
-                  <Link href={`my-domains/${domain.id}`}>
+                  <Link href={`my-domains/${domain.name}`}>
                     <a className="btn btn-outline btn-sm">Manage</a>
                   </Link>
                   <Button color="error" variant="outline" size="sm">

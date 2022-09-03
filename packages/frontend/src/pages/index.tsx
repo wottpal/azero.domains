@@ -123,7 +123,7 @@ const SearchDomains: NextPage = () => {
             <h1 className="text-5xl font-bold">
               Pick your favorite domain
               <br />
-              <span className="mt-3 font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-secondary-content to-error block">
+              <span className="mt-3 font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content block">
                 <Typewriter
                   options={{
                     strings: ['ethwarsaw.azero', 'antoni.azero', 'pepe.azero', 'adam.azero'],

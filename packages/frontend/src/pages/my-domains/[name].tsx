@@ -28,7 +28,7 @@ const ManageDomain: NextPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center overflow-x-auto">
-      <h1 className="pb-12 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-secondary-content to-error">
+      <h1 className="pb-12 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content">
         Manage your azero domain
       </h1>
 

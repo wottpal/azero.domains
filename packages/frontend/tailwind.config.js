@@ -33,6 +33,23 @@ module.exports = {
     // require('@tailwindcss/line-clamp'),
   ],
   daisyui: {
-    themes: ['luxury'],
+    themes: [
+      {
+        mytheme: {
+          primary: '#00eac7',
+          'primary-content': '#14202a',
+          secondary: '#00ccab',
+          accent: '#e164f4',
+          'base-content': '#ffffff',
+          neutral: '#ffffff',
+          'base-100': '#14202a',
+          'base-200': '#4f585f',
+          info: '#85C7DB',
+          success: '#66d16f',
+          warning: '#ffd23f',
+          error: '#ff4f4c',
+        },
+      },
+    ],
   },
 }

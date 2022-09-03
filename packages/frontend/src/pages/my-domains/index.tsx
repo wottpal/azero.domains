@@ -25,7 +25,7 @@ const MyDomains: NextPage = () => {
         <Table.Head>
           <span />
           <span>Domains</span>
-          <span>Adress</span>
+          <span>Address</span>
           <span>Actions</span>
         </Table.Head>
 

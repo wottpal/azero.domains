@@ -4,9 +4,9 @@ import { createContext, FC, PropsWithChildren, useContext, useEffect, useState }
 
 export type PolkadotProviderContextType = {
   accounts?: InjectedAccountWithMeta[]
+  account?: InjectedAccountWithMeta
   api?: any
   setup?: () => Promise<void>
-  actingAddress?: string
 }
 export const PolkadotProviderContext = createContext<PolkadotProviderContextType>({})
 
@@ -17,13 +17,7 @@ export const usePolkadotProviderContext = () => {
 export const PolkadotProvider: FC<PropsWithChildren> = ({ children }) => {
   const [api, setApi] = useState<any>()
   const [accounts, setAccounts] = useState<InjectedAccountWithMeta[]>([])
-  const [block, setBlock] = useState(0)
-  const [lastBlockHash, setLastBlockHash] = useState('')
-  const [contractAddress, setContractAddress] = useState('')
-  const [actingAddress, setActingAddress] = useState('')
-  const [result, setResult] = useState('')
-  const [gasConsumed, setGasConsumed] = useState('')
-  const [outcome, setOutcome] = useState('')
+  const [account, setAccount] = useState<InjectedAccountWithMeta>()
 
   const extensionSetup = async () => {
     const { web3Accounts, web3Enable } = await import('@polkadot/extension-dapp')
@@ -31,6 +25,7 @@ export const PolkadotProvider: FC<PropsWithChildren> = ({ children }) => {
     if (extensions.length === 0) return
     const account = await web3Accounts()
     setAccounts(account)
+    setAccount(!!accounts?.length ? accounts[0] : undefined)
   }
 
   const setup = async () => {
@@ -45,42 +40,12 @@ export const PolkadotProvider: FC<PropsWithChildren> = ({ children }) => {
     await extensionSetup()
   }
 
-  // const getFlipValue = async () => {
-  //   const contract = new ContractPromise(api, abi, contractAddress)
-  //   const { gasConsumed, result, output } = await contract.query.get(actingAddress, {
-  //     value: 0,
-  //     gasLimit: -1,
-  //   })
-  //   setGasConsumed(gasConsumed.toHuman())
-  //   setResult(JSON.stringify(result.toHuman()))
-  //   if (output !== undefined && output !== null) {
-  //     setOutcome(output.toHuman()?.toString() ?? '')
-  //   }
-  // }
-
-  // const changeFlipValue = async () => {
-  //   const { web3FromSource } = await import('@polkadot/extension-dapp')
-  //   const contract = new ContractPromise(api, abi, contractAddress)
-  //   const performingAccount = accounts[0]
-  //   const injector = await web3FromSource(performingAccount.meta.source)
-  //   const flip = await contract.tx.flip({ value: 0, gasLimit: -1 })
-  //   if (injector !== undefined) {
-  //     flip.signAndSend(performingAccount.address, { signer: injector.signer }, (result) => {
-  //       if (result.status.isInBlock) {
-  //         setResult('in a block')
-  //       } else if (result.status.isFinalized) {
-  //         setResult('finalized')
-  //       }
-  //     })
-  //   }
-  // }
-
   useEffect(() => {
     setup()
   }, [])
 
   return (
-    <PolkadotProviderContext.Provider value={{ accounts, api, setup, actingAddress }}>
+    <PolkadotProviderContext.Provider value={{ accounts, account, api, setup }}>
       {children}
     </PolkadotProviderContext.Provider>
   )

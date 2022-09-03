@@ -1,8 +1,10 @@
+import { usePolkadotProviderContext } from '@components/PolkadotProvider'
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import type { NextPage } from 'next'
 import { useState } from 'react'
 import { Button, Hero, Input, InputGroup } from 'react-daisyui'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import Typewriter from 'typewriter-effect'
 
 type Inputs = {
   domain: string
@@ -15,11 +17,43 @@ const SearchDomains: NextPage = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>()
+  const { api, account } = usePolkadotProviderContext()
 
   const [available, setAvailable] = useState(true)
 
   const onSubmit: SubmitHandler<Inputs> = (data) => {
     const { domain } = data
+    if (!domain || !account) return
+
+    // const getFlipValue = async () => {
+    //   const contract = new ContractPromise(api, abi, contractAddress)
+    //   const { gasConsumed, result, output } = await contract.query.get(actingAddress, {
+    //     value: 0,
+    //     gasLimit: -1,
+    //   })
+    //   setGasConsumed(gasConsumed.toHuman())
+    //   setResult(JSON.stringify(result.toHuman()))
+    //   if (output !== undefined && output !== null) {
+    //     setOutcome(output.toHuman()?.toString() ?? '')
+    //   }
+    // }
+
+    // const changeFlipValue = async () => {
+    //   const { web3FromSource } = await import('@polkadot/extension-dapp')
+    //   const contract = new ContractPromise(api, abi, contractAddress)
+    //   const performingAccount = accounts[0]
+    //   const injector = await web3FromSource(performingAccount.meta.source)
+    //   const flip = await contract.tx.flip({ value: 0, gasLimit: -1 })
+    //   if (injector !== undefined) {
+    //     flip.signAndSend(performingAccount.address, { signer: injector.signer }, (result) => {
+    //       if (result.status.isInBlock) {
+    //         setResult('in a block')
+    //       } else if (result.status.isFinalized) {
+    //         setResult('finalized')
+    //       }
+    //     })
+    //   }
+    // }
 
     console.log(domain)
   }
@@ -32,9 +66,18 @@ const SearchDomains: NextPage = () => {
         <Hero.Content className="text-center">
           <div className="max-w-2xl">
             <h1 className="text-5xl font-bold">
-              Pick your favorite{' '}
-              <span className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-secondary-content to-error block">
-                .azero domain
+              Pick your favorite domain
+              <br />
+              <span className="mt-3 font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-secondary-content to-error block">
+                <Typewriter
+                  options={{
+                    strings: ['ethwarsaw.azero', 'antoni.azero', 'pepe.azero', 'adam.azero'],
+                    delay: 75,
+                    cursorClassName: 'text-error',
+                    loop: true,
+                    autoStart: true,
+                  }}
+                />
               </span>
             </h1>
           </div>

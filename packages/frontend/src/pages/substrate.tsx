@@ -3,7 +3,7 @@ import { ContractPromise } from '@polkadot/api-contract'
 import type { InjectedAccountWithMeta } from '@polkadot/extension-inject/types'
 import type { NextPage } from 'next'
 import { useEffect, useState } from 'react'
-import abi from '../abi.json'
+import { deployments } from '../deployments'
 
 const SubstratePage: NextPage = () => {
   const [blockchainUrl, setBlockchainUrl] = useState('wss://ws.test.azero.dev')
@@ -16,6 +16,7 @@ const SubstratePage: NextPage = () => {
   const [result, setResult] = useState('')
   const [gasConsumed, setGasConsumed] = useState('')
   const [outcome, setOutcome] = useState('')
+  const abi = deployments.ContractABC.abi
 
   const extensionSetup = async () => {
     const { web3Accounts, web3Enable } = await import('@polkadot/extension-dapp')
@@ -39,7 +40,7 @@ const SubstratePage: NextPage = () => {
   }
 
   const getFlipValue = async () => {
-    const contract = new ContractPromise(api, abi, contractAddress)
+    const contract = new ContractPromise(api, await abi, contractAddress)
     const { gasConsumed, result, output } = await contract.query.get(actingAddress, {
       value: 0,
       gasLimit: -1,
@@ -53,7 +54,7 @@ const SubstratePage: NextPage = () => {
 
   const changeFlipValue = async () => {
     const { web3FromSource } = await import('@polkadot/extension-dapp')
-    const contract = new ContractPromise(api, abi, contractAddress)
+    const contract = new ContractPromise(api, await abi, contractAddress)
     const performingAccount = accounts[0]
     const injector = await web3FromSource(performingAccount.meta.source)
     const flip = await contract.tx.flip({ value: 0, gasLimit: -1 })

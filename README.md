@@ -41,62 +41,62 @@ We are deploying to the Permaweb via Arweave, Bundlr, and arkb (see https://docs
 pnpm run deploy
 ```
 
-
-
-
-
-
-## Devpost Description 
+## Devpost Description
 
 ## Inspiration
 
-Web3 and the overall Crypto ecosystem need to strive for simplicity and the best user experience possible. One significant improvement to achieve this goal has been the introduction of the Ethererum domains by the Ethereum Name Service (ENS). Thereby, the representation of the wallet address consisting of hexadecimal characters is abstracted away with a simple domain. 
+Web3 and the overall Crypto ecosystem need to strive for simplicity and the best user experience possible. One significant improvement to achieve this goal has been the introduction of the Ethererum domains by the Ethereum Name Service (ENS). Thereby, the representation of the wallet address consisting of arbitrary characters is abstracted away with a simple domain identifier.
 
-Aleph Zero is an L1 blockchain whose technical specifications offer a new level of user experience with near-to-zero transaction costs and sub-second transaction finality. We believe that we can enhance the UX even more by introducing our decentralized **.azero** domains. 
+Aleph Zero is an L1 blockchain whose technical specifications offer a new level of user experience with near-zero transaction costs and sub-second transaction finality. We believe that we can enhance the UX even more by introducing our decentralized **.azero** domains.
 
-This innovation will make it easier for users to navigate the Aleph Zero ecosystem. The domain reduces human error. Sending a transaction to the wrong **.azero** domain is less likely than with an address in hexadecimal characters. This reduces the fear of new users interacting with the web3 ecosystem. Further, using our domains makes sending payments and any other interactions more efficient and convenient. 
+This innovation will make it easier for users to navigate the Aleph Zero ecosystem. The simplicity of domain names reduce human error compared to inputting long addresses. Sending a transaction to the wrong **.azero** domain is less likely than with an address in hexadecimal representation. This reduces the anxiety of new users interacting with the web3 ecosystem. Furthermore, using our domains makes sending payments and any other interactions more efficient and convenient.
 
 ## What it does
 
-The **azero-domains** dapp creates decentralized domains as NFTs on the Aleph Zero testnet. The frontend interacting with the smart contracts is deployed on the Permaweb network by Arweave for maximum censorship resistance. The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is still available with the search function. If yes, he can purchase & claim the domain in just one click. If the user is not yet connected with his wallet, he will be redirected to do so. After the successfull purchase with TAZERO tokens, the user's new domain is shown in his dashboard. He now has the option to 'manage' or 'release' any possessed domain. Managing the domain allows for adding web2 social handles such as from Twitter, Discord or Telegram and from web3 networks such as Lens Protocol as metadata to the NFT. The dapp will also provide a dynamic visual representation of the new domain and the added social handles in form of a contact card. Thereby, our domain system also works as a contact book for all your friends in web3. 
+We deployed Rust-based smart contracts on Aleph Zero testnet that contain a decentralized domain registry as well as an attached metadata storage. Our **https://azero.domains** dApp leverages those contracts and gives the user the ability to search, buy, and manage domains. The frontend interacting with the smart contracts is deployed on the Permaweb network by Arweave for maximum censorship resistance.
 
+The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is available with the search function. If yes, he can purchase & claim the domain in just one click. If the user has not yet connected his wallet to the dApp, he will be prompted to do so. After a successfull purchase with $TAZERO tokens, the user's new domain is shown in his dashboard. He now has the option to 'manage' or 'release' any possessed domain. Managing the domain allows for storing metadata such as social handles (e.g. Twitter, Discord, Telegram, or Lens Protocol), personal website URL or any other arbitrary data. The dApp also provides a shareable, dynamic visual representation of the new domain and the added social handles in form of a contact card. This feature lets the user share his .azero domain as a contact card.
 
 ## How we built it
 
 ### Frontend
 
-For the frontend we used `Next.js` as a framework, with it's many production ready features like page-based routing and the possiblity to easily export 
-
-Dennis :
+The frontend is written in Typescript with `Next.js` used as the framework, and `tailwindcss` as well as `daisyUI` for styling. For the contract interactions we use `polkadot.js` which unfortunately isn't ready for server-side rendered frameworks (see _Challenges we ran into_). For the deployment, we statically export the Next.js app and then upload it to the Arweave Permaweb via `arkb` & `bundlr`.
 
 ### Contracts
+
 We used the ink! eDSL by Parity for Substrate-compatible smart contracts. Since ink! is just Rust with some macros and a WASM build target, even though we didn't have prior experience building SCs in Rust, we were able to quickly get productive by leveraging existing Rust infra and community.
 
 ## Challenges we ran into
-- Polkadot JS Implementation --> its weird
-- Polkadot JS and UI is not ready for SSR
+
+- As stated above, we ran into multiple issues related to `polkadot.js` not being ready for server-side frameworks (i.e. `Next.js`). After quite some time we found a workaround by dynamically importing `@polkadot/extension-dApp` whenever we do contract interactions on the client side. In our opinion this either should be fixed on the `polkadot.js` side, or by a simple wrapper package that makes it work for others with a single import.
+- Then, we had some initial struggles with deploying our static bundle to the Arweave Permaweb. But with the help of Sophie and users from their discord, we figured out that import urls should be dynamic instead of static. And this can be done by adding `assetPrefix: './'` in the config.
 
 ## Accomplishments that we're proud of
+
 - Building and deploying a working and well-tested naming and digital profile service in the span of one day.
 - Going from beginner Rust knowledge to being productive with ink!
 
-
 ## What we learned
+
 - How to write smart contracts for Substrate with ink!
 - How to leverage existing Rust infrastructure for testing and deploying ink! smart contracts
 - How to interface with the chain using Polkadot.js, including both reads and writes
-- 
+- How to deploy a static frontend to the Arweave Permaweb
 
 ## What's next for Azero Domains
 
-After the successfull testnet deplyoment during the hackathon, we are awaiting the samrt contract mainnet deployment by the Aleph Zero team to ship azero.domains on to mainnet with. 
+After the successfull testnet deplyoment during the hackathon, we are awaiting the smart contract mainnet deployment by the Aleph Zero team to ship azero.domains to mainnet. Until then, we will be focussing on creating awareness, creating a community around the project and attracting testnet users to collect feedback and improve the user experience. Further, we will be exploring the feasibility of adding additional features to our dApp to increase the overall utility. Creating a DAO for a decentralized governance and an on-chain governed treasury fueled by revenues from royalties to fund public goods and ecosystem development is also a feasable option for the future.
 
-- integrating the following features:
-- marketplace?
-- trading of domains
-- NFT-compatiblity 
+Potential future features could include:
 
-Tech:
-- mainnet deployment
-- upgradable smart contracts
-- 
+- NFT implementation of domain and visual implementation via permeweb by Arweave
+- Feature-rich marketplace with fixed asked price, auctions, dutch auctions and bundled transactions
+- Wallet features and direct domain-to-domain transactions
+- Contact book for further increase in UX and convenience
+
+Potential future tech improvements:
+
+- Mainnet deployment
+- Upgradable smart contracts
+- Mobile optimized version

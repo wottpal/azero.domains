@@ -44,7 +44,7 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
           <Navbar.Center className="hidden lg:flex">
             <Menu horizontal className="p-0">
               <Menu.Item>
-                <Link href="/search-domains">
+                <Link href="/">
                   <a>Search Domains</a>
                 </Link>
               </Menu.Item>

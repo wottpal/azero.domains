@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0x3907a46c2dd7a84ff80efc81d37c83fcb2fe741bf29ced13e6e3563e39d97286",
+    "hash": "0x1078d7c75c892619ba4adbfe902862adb7d0af529fdba7d593b067f551a1ad9d",
     "language": "ink! 3.3.1",
     "compiler": "rustc 1.65.0-nightly"
   },
@@ -209,6 +209,40 @@
         }
       ],
       "messages": [
+        {
+          "args": [
+            {
+              "label": "value",
+              "type": {
+                "displayName": [
+                  "Balance"
+                ],
+                "type": 6
+              }
+            }
+          ],
+          "docs": [
+            " Transfers `value` amount of tokens to the caller.",
+            "",
+            " # Errors",
+            "",
+            " - Panics in case the requested transfer exceeds the contract balance.",
+            " - Panics in case the requested transfer would have brought this",
+            "   contract's balance below the minimum balance (i.e. the chain's",
+            "   existential deposit).",
+            " - Panics in case the transfer failed for another reason."
+          ],
+          "label": "withdraw",
+          "mutates": true,
+          "payable": false,
+          "returnType": {
+            "displayName": [
+              "Result"
+            ],
+            "type": 13
+          },
+          "selector": "0x410fcc9d"
+        },
         {
           "args": [
             {
@@ -555,6 +589,15 @@
             "layout": {
               "cell": {
                 "key": "0x0400000000000000000000000000000000000000000000000000000000000000",
+                "ty": 2
+              }
+            },
+            "name": "owner"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
                 "ty": 7
               }
             },
@@ -563,7 +606,7 @@
           {
             "layout": {
               "cell": {
-                "key": "0x0500000000000000000000000000000000000000000000000000000000000000",
+                "key": "0x0600000000000000000000000000000000000000000000000000000000000000",
                 "ty": 9
               }
             },
@@ -886,6 +929,10 @@
                 {
                   "index": 5,
                   "name": "NoRecordsForAddress"
+                },
+                {
+                  "index": 6,
+                  "name": "WithdrawFailed"
                 }
               ]
             }

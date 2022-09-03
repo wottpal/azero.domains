@@ -8,7 +8,6 @@ use ink_lang as ink;
 mod dns {
     use alloc::string::String;
     use alloc::vec::Vec;
-    use ink_env::call::Call;
 
     use ink_storage::{
         traits::SpreadAllocate,
@@ -109,7 +108,7 @@ mod dns {
         /// Address has no records
         NoRecordsForAddress,
         /// Withdraw failed
-        WithdrawFailed
+        WithdrawFailed,
     }
 
     /// Type alias for the contract's result type.
@@ -143,7 +142,7 @@ mod dns {
         #[ink(message)]
         pub fn withdraw(&mut self, value: Balance) -> Result<()> {
             if self.owner != self.env().caller() {
-               return Err(CallerIsNotOwner)
+                return Err(CallerIsNotOwner);
             }
 
             assert!(value <= self.env().balance(), "insufficient funds!");
@@ -194,11 +193,12 @@ mod dns {
             let caller = self.env().caller();
             let owner = self.get_owner_or_default(&name);
             if caller != owner {
-                return Err(Error::CallerIsNotOwner);
+                return Err(CallerIsNotOwner);
             }
 
             self.name_to_owner.remove(&name);
             self.name_to_address.remove(&name);
+            self.remove_name_from_owner(caller, name.clone());
             self.env().emit_event(Release { name, from: caller });
 
             Ok(())
@@ -231,11 +231,22 @@ mod dns {
             let caller = self.env().caller();
             let owner = self.get_owner_or_default(&name);
             if caller != owner {
-                return Err(Error::CallerIsNotOwner);
+                return Err(CallerIsNotOwner);
             }
 
             let old_owner = self.name_to_owner.get(&name);
             self.name_to_owner.insert(&name, &to);
+
+            /* Remove from reverse search and add again */
+            self.remove_name_from_owner(caller, name.clone());
+            let previous_names = self.owner_to_names.get(to);
+            if let Some(names) = previous_names {
+                let mut new_names = names.clone();
+                new_names.push(name.clone());
+                self.owner_to_names.insert(to, &new_names);
+            } else {
+                self.owner_to_names.insert(to, &Vec::from([name.clone()]));
+            }
 
             self.env().emit_event(Transfer {
                 name,
@@ -279,6 +290,15 @@ mod dns {
             return self.owner_to_names.get(owner);
         }
 
+        /// Deletes a name from owner
+        fn remove_name_from_owner(&mut self, owner: ink_env::AccountId, name: String) {
+            if let Some(old_names) = self.owner_to_names.get(owner) {
+                let mut new_names: Vec<String> = old_names.clone();
+                new_names.retain(|prevname| prevname.clone() != name);
+                self.owner_to_names.insert(owner, &new_names);
+            }
+        }
+
         // /// Sets an arbitrary record
         // #[ink(message)]
         // pub fn set_record(&mut self, owner: ink_env::AccountId, record: (String, String)) {
@@ -296,8 +316,6 @@ mod dns {
         //     //     self.additional_info.insert(owner, &Vec::from([record]));
         //     // }
         // }
-
-        // TODO: !!! clear reverse search on transfer and release
 
         /// Gets an arbitrary record by key
         #[ink(message)]
@@ -366,7 +384,8 @@ mod dns {
             let mut contract = DomainNameService::new(None);
 
             assert_eq!(contract.register(name.clone()), Ok(()));
-            assert_eq!(contract.register(name), Err(Error::NameAlreadyExists));
+            assert_eq!(contract.get_names_of_address(default_accounts.alice), Some(Vec::from([name.clone()])));
+            assert_eq!(contract.register(name.clone()), Err(Error::NameAlreadyExists));
         }
 
         #[ink::test]
@@ -381,7 +400,7 @@ mod dns {
             let acc_balance_before_transfer: Balance = ink_env::test::get_account_balance::<DefaultEnvironment>(default_accounts.alice).unwrap();
             set_value_transferred::<ink_env::DefaultEnvironment>(50 ^ 12);
             assert_eq!(contract.register(name.clone()), Ok(()));
-            assert_eq!(contract.withdraw(50^12), Ok(()));
+            assert_eq!(contract.withdraw(50 ^ 12), Ok(()));
             let acc_balance_after_withdraw: Balance = ink_env::test::get_account_balance::<DefaultEnvironment>(default_accounts.alice).unwrap();
             assert_eq!(acc_balance_before_transfer + 50 ^ 12, acc_balance_after_withdraw);
         }
@@ -400,7 +419,7 @@ mod dns {
             assert_eq!(contract.register(name.clone()), Ok(()));
 
             set_next_caller(default_accounts.bob);
-            assert_eq!(contract.withdraw(50^12), Err(CallerIsNotOwner));
+            assert_eq!(contract.withdraw(50 ^ 12), Err(CallerIsNotOwner));
         }
 
         #[ink::test]
@@ -466,9 +485,12 @@ mod dns {
             assert_eq!(contract.set_address(name.clone(), default_accounts.alice), Ok(()));
             assert_eq!(contract.get_owner(name.clone()), default_accounts.alice);
             assert_eq!(contract.get_address(name.clone()), default_accounts.alice);
+            assert_eq!(contract.get_names_of_address(default_accounts.alice), Some(Vec::from([name.clone()])));
+
             assert_eq!(contract.release(name.clone()), Ok(()));
             assert_eq!(contract.get_owner(name.clone()), Default::default());
             assert_eq!(contract.get_address(name.clone()), Default::default());
+            assert_eq!(contract.get_names_of_address(default_accounts.alice), Some(Vec::from([])));
 
             /* Another account can register again*/
             set_next_caller(default_accounts.bob);
@@ -516,6 +538,10 @@ mod dns {
 
             // Test transfer of owner.
             assert_eq!(contract.transfer(name.clone(), accounts.bob), Ok(()));
+
+            assert_eq!(contract.get_names_of_address(accounts.alice), Some(Vec::from([])));
+            assert_eq!(contract.get_names_of_address(accounts.bob), Some(Vec::from([name.clone()])));
+
 
             // Owner is bob, alice `set_address` should fail.
             assert_eq!(

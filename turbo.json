@@ -1,0 +1,30 @@
+{
+  "$schema": "https://turborepo.org/schema.json",
+  "baseBranch": "origin/main",
+  "pipeline": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": [".next/**", "deployments/**", "artifacts/**", "typechain-types/**"]
+    },
+    "@ethathon/frontend#build": {
+      "dependsOn": ["@ethathon/contracts#build"],
+      "outputs": [".next/**", "deployments/**", "artifacts/**", "typechain-types/**"]
+    },
+    "@ethathon/frontend#dev": {
+      "dependsOn": ["@ethathon/contracts#build"],
+      "outputs": [".next/**", "deployments/**", "artifacts/**", "typechain-types/**"]
+    },
+    "lint": {
+      "outputs": []
+    },
+    "lint:fix": {}
+  },
+  "globalDependencies": [
+    ".env",
+    ".env.local",
+    "tsconfig.json",
+    ".eslintrc.json",
+    ".prettierrc.json",
+    ".solhint.json"
+  ]
+}

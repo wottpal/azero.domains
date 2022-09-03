@@ -63,7 +63,10 @@ The **azero-domains** dapp creates decentralized domains as NFTs on the Aleph Ze
 
 ## How we built it
 
-Frontend: 
+### Frontend
+
+For the frontend we used `Next.js` as a framework, with it's many production ready features like page-based routing and the possiblity to easily export 
+
 Dennis :
 
 ## Challenges we ran into

@@ -2,11 +2,6 @@
   "name": "@azns/frontend",
   "license": "MIT",
   "version": "0.0.1",
-  "babelMacros": {
-    "twin": {
-      "preset": "emotion"
-    }
-  },
   "scripts": {
     "dev": "NODE_ENV=development next dev",
     "build": "NODE_ENV=production next build",
@@ -25,18 +20,22 @@
     "@emotion/server": "^11.10.0",
     "@emotion/styled": "^11.10.4",
     "@headlessui/react": "^1.6.6",
+    "autoprefixer": "^10.4.8",
     "axios": "^0.27.2",
     "cookies-next": "^2.1.1",
     "copy-to-clipboard": "^3.3.2",
+    "daisyui": "^2.24.0",
     "dayjs": "^1.11.5",
     "graphql": "^16.6.0",
     "graphql-request": "^5.0.0",
     "next": "^12.2.5",
-    "next-transpile-modules": "^9.0.0",
     "next-seo": "^5.5.0",
     "next-themes": "^0.2.0",
+    "next-transpile-modules": "^9.0.0",
     "nprogress": "^0.2.0",
+    "postcss": "^8.4.16",
     "react": "^18.2.0",
+    "react-daisyui": "^2.3.2",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.34.2",
     "react-hot-toast": "^2.3.0",

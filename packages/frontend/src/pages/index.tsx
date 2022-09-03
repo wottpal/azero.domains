@@ -1,11 +1,13 @@
 import type { NextPage } from 'next'
-import 'twin.macro'
-import tw from 'twin.macro'
-
-const Button = tw.button`m-2 px-2 py-1 rounded-lg border border-gray-400 text-gray-400 hover:text-white`
+import { Button } from 'react-daisyui'
 
 const HomePage: NextPage = () => {
-  return <>Hello World</>
+  return (
+    <>
+      <p className="text-primary text-3xl">Hello World</p>
+      <Button color="primary">Click me!</Button>
+    </>
+  )
 }
 
 export default HomePage

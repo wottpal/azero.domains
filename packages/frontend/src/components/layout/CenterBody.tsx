@@ -1,3 +1,9 @@
-import tw from 'twin.macro'
+import { FC, PropsWithChildren } from 'react'
 
-export const CenterBody = tw.div`h-full flex flex-col justify-center items-center relative`
+export const CenterBody: FC<PropsWithChildren> = ({ children }) => {
+  return (
+    <>
+      <main className="h-full flex flex-col justify-center items-center relative">{children}</main>
+    </>
+  )
+}

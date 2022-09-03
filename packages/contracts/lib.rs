@@ -8,12 +8,13 @@ use ink_lang as ink;
 mod dns {
     use alloc::string::String;
     use alloc::vec::Vec;
+    use ink_env::call::Call;
 
     use ink_storage::{
         traits::SpreadAllocate,
         Mapping,
     };
-    use crate::dns::Error::{CallerIsNotOwner, NoRecordsForAddress, RecordNotFound};
+    use crate::dns::Error::{CallerIsNotOwner, NoRecordsForAddress, RecordNotFound, WithdrawFailed};
 
     /// Emitted whenever a new name is being registered.
     #[ink(event)]
@@ -83,6 +84,9 @@ mod dns {
         default_address: ink_env::AccountId,
         /// Fee to pay for domain registration
         fee: Balance,
+        /// Owner of the contract
+        /// can withdraw funds
+        owner: ink_env::AccountId,
         /// All names of an address
         owner_to_names: Mapping<ink_env::AccountId, Vec<String>>,
         additional_info: Mapping<String, Vec<(String, String)>>,
@@ -104,6 +108,8 @@ mod dns {
         RecordNotFound,
         /// Address has no records
         NoRecordsForAddress,
+        /// Withdraw failed
+        WithdrawFailed
     }
 
     /// Type alias for the contract's result type.
@@ -120,8 +126,33 @@ mod dns {
                 contract.fee = match fee {
                     Some(fee) => fee,
                     None => Default::default()
-                }
+                };
+                contract.owner = Self::env().caller();
             })
+        }
+
+        /// Transfers `value` amount of tokens to the caller.
+        ///
+        /// # Errors
+        ///
+        /// - Panics in case the requested transfer exceeds the contract balance.
+        /// - Panics in case the requested transfer would have brought this
+        ///   contract's balance below the minimum balance (i.e. the chain's
+        ///   existential deposit).
+        /// - Panics in case the transfer failed for another reason.
+        #[ink(message)]
+        pub fn withdraw(&mut self, value: Balance) -> Result<()> {
+            if self.owner != self.env().caller() {
+               return Err(CallerIsNotOwner)
+            }
+
+            assert!(value <= self.env().balance(), "insufficient funds!");
+
+            if self.env().transfer(self.env().caller(), value).is_err() {
+                return Err(WithdrawFailed);
+            }
+
+            Ok(())
         }
 
         /// Register specific name with caller as owner.
@@ -312,9 +343,11 @@ mod dns {
     #[cfg(test)]
     mod tests {
         use alloc::string::ToString;
+        use ink_env::DefaultEnvironment;
         use super::*;
         use ink_lang as ink;
         use ink_env::test::*;
+        use crate::dns;
 
         fn default_accounts() -> ink_env::test::DefaultAccounts<ink_env::DefaultEnvironment> {
             ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
@@ -334,6 +367,40 @@ mod dns {
 
             assert_eq!(contract.register(name.clone()), Ok(()));
             assert_eq!(contract.register(name), Err(Error::NameAlreadyExists));
+        }
+
+        #[ink::test]
+        fn withdraw_works() {
+            let default_accounts = default_accounts();
+            let name = String::from("test");
+
+            set_next_caller(default_accounts.alice);
+            let mut contract = DomainNameService::new(Some(50));
+
+
+            let acc_balance_before_transfer: Balance = ink_env::test::get_account_balance::<DefaultEnvironment>(default_accounts.alice).unwrap();
+            set_value_transferred::<ink_env::DefaultEnvironment>(50 ^ 12);
+            assert_eq!(contract.register(name.clone()), Ok(()));
+            assert_eq!(contract.withdraw(50^12), Ok(()));
+            let acc_balance_after_withdraw: Balance = ink_env::test::get_account_balance::<DefaultEnvironment>(default_accounts.alice).unwrap();
+            assert_eq!(acc_balance_before_transfer + 50 ^ 12, acc_balance_after_withdraw);
+        }
+
+        #[ink::test]
+        fn withdraw_only_owner() {
+            let default_accounts = default_accounts();
+            let name = String::from("test");
+
+            set_next_caller(default_accounts.alice);
+            let mut contract = DomainNameService::new(Some(50));
+
+
+            let acc_balance_before_transfer: Balance = ink_env::test::get_account_balance::<DefaultEnvironment>(default_accounts.alice).unwrap();
+            set_value_transferred::<ink_env::DefaultEnvironment>(50 ^ 12);
+            assert_eq!(contract.register(name.clone()), Ok(()));
+
+            set_next_caller(default_accounts.bob);
+            assert_eq!(contract.withdraw(50^12), Err(CallerIsNotOwner));
         }
 
         #[ink::test]

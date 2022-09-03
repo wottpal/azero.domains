@@ -27,3 +27,16 @@ pnpm dev
 # Only start frontend
 pnpm frontend:dev
 ```
+
+## Deployment
+
+We are deploying to the Permaweb via Arweave, Bundlr, and arkb (see https://docs.arweave.org/developers/tools/textury-arkb).
+
+```bash
+# 1. Create a Bundlr Wallet & load it with some tokens
+
+# 2. Place a `wallet.json` with your private key into `./packages/frontend/`
+
+# 3. Inside of the `frontend` package execute
+pnpm run deploy
+```

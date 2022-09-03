@@ -61,10 +61,7 @@ The user journey with the Azero Domains app is as follows. First, the user check
 
 ### Frontend
 
-For the frontend we used `Next.js` as a framework, with its many production ready features like filesystem-based routing and the possiblity to easily export
-
-Frontend:
-Dennis :
+The frontend is written in Typescript with `Next.js` used as the framework, and `tailwindcss` as well as `daisyUI` for styling. For the contract interactions we use `polkadot.js` which unfortunately isn't ready for server-side rendered frameworks (see _Challenges we ran into_). For the deployment, we statically export the Next.js app and then upload it to the Arweave Permaweb via `arkb` & `bundlr`.
 
 ### Contracts
 

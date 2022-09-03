@@ -21,8 +21,8 @@ const MyDomains: NextPage = () => {
       <h1 className="pb-12 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content">
         Domain Overview
       </h1>
-      <Table>
-        <Table.Head>
+      <Table className=" rounded">
+        <Table.Head className="bg-primary/70">
           <span />
           <span>Domains</span>
           <span>Address</span>
@@ -31,16 +31,16 @@ const MyDomains: NextPage = () => {
 
         <Table.Body>
           {myDomains.map((domain, index) => (
-            <Table.Row key={domain.id} hover>
+            <Table.Row className="bg-base-200" key={domain.id} hover>
               <span>{index + 1}</span>
               <span>{domain.name}</span>
               <span>{domain.address}</span>
               <span>
                 <div className="flex space-x-4">
                   <Link href={`my-domains/${domain.name}`}>
-                    <a className="btn btn-outline btn-sm">Manage</a>
+                    <a className="bxtn btn-sm">Manage</a>
                   </Link>
-                  <Button color="error" variant="outline" size="sm">
+                  <Button color="error" size="sm">
                     Release Domain
                   </Button>
                 </div>
@@ -49,6 +49,33 @@ const MyDomains: NextPage = () => {
           ))}
         </Table.Body>
       </Table>
+
+      {/* <div className="overflow-x-auto">
+        <table className="table w-full">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Job</th>
+              <th>Favorite Color</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr className="hover">
+              <th>2</th>
+              <td className="bg-primary">Hart Hagerty</td>
+              <td className="bg-primary">Desktop Support Technician</td>
+              <td className="bg-primary">Purple</td>
+            </tr>
+            <tr className="hover ">
+              <th>2</th>
+              <td>Hart Hagerty</td>
+              <td>Desktop Support Technician</td>
+              <td>Purple</td>
+            </tr>
+          </tbody>
+        </table>
+      </div> */}
     </div>
   )
 }

@@ -35,6 +35,6 @@ module.exports = {
     // require('@tailwindcss/line-clamp'),
   ],
   daisyui: {
-    themes: ['cupcake', 'dark', 'cmyk'],
+    themes: ['luxury'],
   },
 }

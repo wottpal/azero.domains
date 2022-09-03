@@ -12,6 +12,7 @@ mod dns {
         traits::SpreadAllocate,
         Mapping,
     };
+    use crate::dns::Error::{NoRecordsForAddress, RecordNotFound};
 
     /// Emitted whenever a new name is being registered.
     #[ink(event)]
@@ -83,6 +84,7 @@ mod dns {
         fee: Balance,
         /// All names of an address
         owner_to_names: Mapping<ink_env::AccountId, Vec<String>>,
+        additional_info: Mapping<ink_env::AccountId, Vec<(String, String)>>,
     }
 
     /// Errors that can occur upon calling this contract.
@@ -97,6 +99,10 @@ mod dns {
         FeeNotPaid,
         /// Returned if name is empty
         NameEmpty,
+        /// Record with the following key doesn't exist
+        RecordNotFound,
+        /// Address has no records
+        NoRecordsForAddress,
     }
 
     /// Type alias for the contract's result type.
@@ -240,10 +246,64 @@ mod dns {
         pub fn get_names_of_address(&self, owner: ink_env::AccountId) -> Option<Vec<String>> {
             return self.owner_to_names.get(owner);
         }
+
+        // /// Sets an arbitrary record
+        // #[ink(message)]
+        // pub fn set_record(&mut self, owner: ink_env::AccountId, record: (String, String)) {
+        //     self.additional_info.insert(owner, )
+        //
+        //     // /* If info vec already exists, modify it */
+        //     // if let Some(original_info) = self.additional_info.get(owner) {
+        //     //     /* Filter out the record from the vector, if it is already there */
+        //     //     let mut filtered_info: Vec<&(String, String)> = original_info.clone().iter().filter(|&&tuple| {
+        //     //         return tuple.0 != record.0.clone();
+        //     //     }).collect();
+        //     //     filtered_info.push(&record);
+        //     //     self.additional_info.insert(owner, &Vec::from(filtered_info));
+        //     // } else {
+        //     //     self.additional_info.insert(owner, &Vec::from([record]));
+        //     // }
+        // }
+
+        // TODO: !!! clear reverse search on transfer and release
+
+        /// Gets an arbitrary record by key
+        #[ink(message)]
+        pub fn get_record(&self, owner: ink_env::AccountId, key: String) -> Result<String> {
+            return if let Some(info) = self.additional_info.get(owner) {
+                if let Some(value) = info.iter().find(|tuple| {
+                    return tuple.0 == key;
+                }) {
+                    Ok(value.clone().1)
+                } else {
+                    Err(RecordNotFound)
+                }
+            } else {
+                Err(NoRecordsForAddress)
+            };
+        }
+
+        /// Sets an arbitrary record
+        #[ink(message)]
+        pub fn set_all_records(&mut self, records: Vec<(String, String)>) {
+            let caller = self.env().caller();
+            self.additional_info.insert(caller, &records);
+        }
+
+        /// Gets all records
+        #[ink(message)]
+        pub fn get_all_records(&self, owner: ink_env::AccountId) -> Result<Vec<(String, String)>> {
+            return if let Some(info) = self.additional_info.get(owner) {
+                return Ok(info);
+            } else {
+                Err(NoRecordsForAddress)
+            };
+        }
     }
 
     #[cfg(test)]
     mod tests {
+        use alloc::string::ToString;
         use super::*;
         use ink_lang as ink;
         use ink_env::test::*;
@@ -392,6 +452,27 @@ mod dns {
             // Now owner is bob, `set_address` should be successful.
             assert_eq!(contract.set_address(name.clone(), accounts.bob), Ok(()));
             assert_eq!(contract.get_address(name.clone()), accounts.bob);
+        }
+
+        #[ink::test]
+        fn additional_data_works() {
+            let accounts = default_accounts();
+            let key = String::from("twitter");
+            let value = String::from("@test");
+            let records = Vec::from([(key.clone(), value.clone())]);
+
+            set_next_caller(accounts.alice);
+            let mut contract = DomainNameService::new(None);
+            contract.set_all_records(records.clone());
+            assert_eq!(contract.get_record(accounts.alice, key.clone()).unwrap(), value.clone());
+
+            /* Confirm idempotency */
+            contract.set_all_records(records.clone());
+            assert_eq!(contract.get_record(accounts.alice, key.clone()).unwrap(), value.clone());
+
+            /* Confirm overwriting */
+            contract.set_all_records(Vec::from([("twitter".to_string(), "@newtest".to_string())]));
+            assert_eq!(contract.get_all_records(accounts.alice).unwrap(), Vec::from([("twitter".to_string(), "@newtest".to_string())]));
         }
     }
 }

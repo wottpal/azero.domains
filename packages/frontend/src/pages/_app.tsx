@@ -1,6 +1,9 @@
 import { Layout } from '@components/layout/Layout'
+import { PolkadotProvider } from '@components/PolkadotProvider'
+import { env } from '@shared/environment'
 import '@styles/global.css'
 import '@styles/tailwind.css'
+import { DefaultSeo } from 'next-seo'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Router from 'next/router'
@@ -15,21 +18,21 @@ Router.events.on('routeChangeError', () => NProgress.done())
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      {/* SEO TODO */}
-      {/* <DefaultSeo
+      {/* SEO */}
+      <DefaultSeo
         dangerouslySetAllPagesToNoFollow={!env.isProduction}
         dangerouslySetAllPagesToNoIndex={!env.isProduction}
-        defaultTitle="TODO"
-        titleTemplate="%s | TODO"
-        description="TODO"
+        defaultTitle="azero.domains"
+        titleTemplate="%s | azero.domains"
+        description="Domain Nameservice for Aleph Zero"
         openGraph={{
           type: 'website',
           locale: 'en',
           url: env.url,
-          site_name: 'TODO',
+          site_name: 'azero.domains',
           images: [
             {
-              url: `${env.url}/og/TODO.jpg`,
+              url: `${env.url}/og/og.jpg`,
               width: 1200,
               height: 670,
             },
@@ -38,7 +41,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         twitter={{
           handle: '@TODO',
         }}
-      /> */}
+      />
 
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -55,9 +58,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="theme-color" content="#ffffff" /> */}
       </Head>
 
-      <Layout>
-        <Component {...pageProps} />
-      </Layout>
+      <PolkadotProvider>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </PolkadotProvider>
 
       <Toaster />
     </>

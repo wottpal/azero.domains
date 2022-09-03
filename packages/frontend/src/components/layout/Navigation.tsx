@@ -54,11 +54,6 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
                   <a>My Domains</a>
                 </Link>
               </Menu.Item>
-              <Menu.Item>
-                <Link href="/substrate">
-                  <a>Test</a>
-                </Link>
-              </Menu.Item>
             </Menu>
           </Navbar.Center>
           <Navbar.End>

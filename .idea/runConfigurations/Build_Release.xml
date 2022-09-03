@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Contract" type="CargoCommandRunConfiguration" factoryName="Cargo Command" nameIsGenerated="true">
-    <option name="command" value="contract build" />
+  <configuration default="false" name="Build Release" type="CargoCommandRunConfiguration" factoryName="Cargo Command">
+    <option name="command" value="contract build --release" />
     <option name="workingDirectory" value="file://$PROJECT_DIR$/packages/contracts" />
     <option name="channel" value="NIGHTLY" />
     <option name="requiredFeatures" value="true" />

@@ -1,7 +1,6 @@
 import { Layout } from '@components/layout/Layout'
 import { cache } from '@emotion/css'
 import { CacheProvider } from '@emotion/react'
-import '@rainbow-me/rainbowkit/styles.css'
 import GlobalStyles from '@styles/GlobalStyles'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'

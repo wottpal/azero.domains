@@ -7,6 +7,7 @@ use ink_lang as ink;
 #[ink::contract]
 mod dns {
     use alloc::string::String;
+    use alloc::vec::Vec;
     use ink_storage::{
         traits::SpreadAllocate,
         Mapping,
@@ -79,7 +80,9 @@ mod dns {
         /// The default address.
         default_address: ink_env::AccountId,
         /// Fee to pay for domain registration
-        fee: Balance
+        fee: Balance,
+        /// All names of an address
+        owner_to_names: Mapping<ink_env::AccountId, Vec<String>>,
     }
 
     /// Errors that can occur upon calling this contract.
@@ -130,10 +133,18 @@ mod dns {
 
             let caller = self.env().caller();
             if self.name_to_owner.contains(&name) {
-                return Err(Error::NameAlreadyExists)
+                return Err(Error::NameAlreadyExists);
             }
 
             self.name_to_owner.insert(&name, &caller);
+            let previous_names = self.owner_to_names.get(caller);
+            if let Some(names) = previous_names {
+                let mut new_names = names.clone();
+                new_names.push(name.clone());
+                self.owner_to_names.insert(caller, &new_names);
+            } else {
+                self.owner_to_names.insert(caller, &Vec::from([name.clone()]));
+            }
             self.env().emit_event(Register { name, from: caller });
 
             Ok(())
@@ -145,7 +156,7 @@ mod dns {
             let caller = self.env().caller();
             let owner = self.get_owner_or_default(&name);
             if caller != owner {
-                return Err(Error::CallerIsNotOwner)
+                return Err(Error::CallerIsNotOwner);
             }
 
             self.name_to_owner.remove(&name);
@@ -161,7 +172,7 @@ mod dns {
             let caller = self.env().caller();
             let owner = self.get_owner_or_default(&name);
             if caller != owner {
-                return Err(Error::CallerIsNotOwner)
+                return Err(Error::CallerIsNotOwner);
             }
 
             let old_address = self.name_to_address.get(&name);
@@ -182,7 +193,7 @@ mod dns {
             let caller = self.env().caller();
             let owner = self.get_owner_or_default(&name);
             if caller != owner {
-                return Err(Error::CallerIsNotOwner)
+                return Err(Error::CallerIsNotOwner);
             }
 
             let old_owner = self.name_to_owner.get(&name);
@@ -223,6 +234,12 @@ mod dns {
                 .get(&name)
                 .unwrap_or(self.default_address)
         }
+
+        /// Returns all names the address owns
+        #[ink(message)]
+        pub fn get_names_of_address(&self, owner: ink_env::AccountId) -> Option<Vec<String>> {
+            return self.owner_to_names.get(owner);
+        }
     }
 
     #[cfg(test)]
@@ -231,8 +248,7 @@ mod dns {
         use ink_lang as ink;
         use ink_env::test::*;
 
-        fn default_accounts(
-        ) -> ink_env::test::DefaultAccounts<ink_env::DefaultEnvironment> {
+        fn default_accounts() -> ink_env::test::DefaultAccounts<ink_env::DefaultEnvironment> {
             ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
         }
 
@@ -253,6 +269,22 @@ mod dns {
         }
 
         #[ink::test]
+        fn reverse_search_works() {
+            let default_accounts = default_accounts();
+            let name = String::from("test");
+            let name2 = String::from("test2");
+
+            set_next_caller(default_accounts.alice);
+            let mut contract = DomainNameService::new(None);
+
+            assert_eq!(contract.register(name.clone()), Ok(()));
+            assert_eq!(contract.register(name2.clone()), Ok(()));
+            assert!(contract.get_names_of_address(default_accounts.alice).unwrap().contains(&String::from("test")));
+            assert!(contract.get_names_of_address(default_accounts.alice).unwrap().contains(&String::from("test2")));
+        }
+
+
+        #[ink::test]
         fn register_empty_reverts() {
             let default_accounts = default_accounts();
             let name = String::from("");
@@ -269,9 +301,9 @@ mod dns {
             let name = String::from("test");
 
             set_next_caller(default_accounts.alice);
-            let mut contract = DomainNameService::new(Some(50^12));
+            let mut contract = DomainNameService::new(Some(50 ^ 12));
 
-            set_value_transferred::<ink_env::DefaultEnvironment>(50^12);
+            set_value_transferred::<ink_env::DefaultEnvironment>(50 ^ 12);
             assert_eq!(contract.register(name.clone()), Ok(()));
             assert_eq!(contract.register(name), Err(Error::NameAlreadyExists));
         }
@@ -282,7 +314,7 @@ mod dns {
             let name = String::from("test");
 
             set_next_caller(default_accounts.alice);
-            let mut contract = DomainNameService::new(Some(50^12));
+            let mut contract = DomainNameService::new(Some(50 ^ 12));
 
             assert_eq!(contract.register(name), Err(Error::FeeNotPaid));
         }

@@ -55,7 +55,7 @@ This innovation will make it easier for users to navigate the Aleph Zero ecosyst
 
 We deployed Rust-based smart contracts on Aleph Zero testnet that contain a decentralized domain registry as well as an attached metadata storage. Our **https://azero.domains** dApp leverages those contracts and gives the user the ability to search, buy, and manage domains. The frontend interacting with the smart contracts is deployed on the Permaweb network by Arweave for maximum censorship resistance.
 
-The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is available with the search function. If yes, he can purchase & claim the domain in just one click. If the user has not yet connected his wallet to the dapp, he will be prompted to do so. After a successfull purchase with $TAZERO tokens, the user's new domain is shown in his dashboard. He now has the option to 'manage' or 'release' any possessed domain. Managing the domain allows for storing metadata such as social handles (e.g. Twitter, Discord, Telegram, or Lens Protocol), personal website URL or any other arbitrary data. The dApp also provides a shareable, dynamic visual representation of the new domain and the added social handles in form of a contact card. This feature lets the user share his .azero domain as a contact card.
+The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is available with the search function. If yes, he can purchase & claim the domain in just one click. If the user has not yet connected his wallet to the dApp, he will be prompted to do so. After a successfull purchase with $TAZERO tokens, the user's new domain is shown in his dashboard. He now has the option to 'manage' or 'release' any possessed domain. Managing the domain allows for storing metadata such as social handles (e.g. Twitter, Discord, Telegram, or Lens Protocol), personal website URL or any other arbitrary data. The dApp also provides a shareable, dynamic visual representation of the new domain and the added social handles in form of a contact card. This feature lets the user share his .azero domain as a contact card.
 
 ## How we built it
 
@@ -69,7 +69,7 @@ We used the ink! eDSL by Parity for Substrate-compatible smart contracts. Since 
 
 ## Challenges we ran into
 
-- As stated above, we ran into multiple issues related to `polkadot.js` not being ready for server-side frameworks (i.e. `Next.js`). After quite some time we found a workaround by dynamically importing `@polkadot/extension-dapp` whenever we do contract interactions on the client side. In our opinion this either should be fixed on the `polkadot.js` side, or by a simple wrapper package that makes it work for others with a single import.
+- As stated above, we ran into multiple issues related to `polkadot.js` not being ready for server-side frameworks (i.e. `Next.js`). After quite some time we found a workaround by dynamically importing `@polkadot/extension-dApp` whenever we do contract interactions on the client side. In our opinion this either should be fixed on the `polkadot.js` side, or by a simple wrapper package that makes it work for others with a single import.
 - Then, we had some initial struggles with deploying our static bundle to the Arweave Permaweb. But with the help of Sophie and users from their discord, we figured out that import urls should be dynamic instead of static. And this can be done by adding `assetPrefix: './'` in the config.
 
 ## Accomplishments that we're proud of
@@ -82,20 +82,11 @@ We used the ink! eDSL by Parity for Substrate-compatible smart contracts. Since 
 - How to write smart contracts for Substrate with ink!
 - How to leverage existing Rust infrastructure for testing and deploying ink! smart contracts
 - How to interface with the chain using Polkadot.js, including both reads and writes
--
--
-
-## Accomplishments that we're proud of
-
--
-
-## What we learned
-
-- How to write smart contracts with Ink! in Rust
+- How to deploy a static frontend to the Arweave Permaweb
 
 ## What's next for Azero Domains
 
-After the successfull testnet deplyoment during the hackathon, we are awaiting the smart contract mainnet deployment by the Aleph Zero team to ship azero.domains to mainnet. Until then, we will be focussing on creating awareness, creating a community around the project and attracting testnet users to collect feedback and improve the user experience. Further, we will be exploring the feasibility of adding additional features to our dapp to increase the overall utility. Creating a DAO for a decentralized governance and an on-chain governed treasury fueled by revenues from royalties to fund public goods and ecosystem development is also a feasable option for the future.
+After the successfull testnet deplyoment during the hackathon, we are awaiting the smart contract mainnet deployment by the Aleph Zero team to ship azero.domains to mainnet. Until then, we will be focussing on creating awareness, creating a community around the project and attracting testnet users to collect feedback and improve the user experience. Further, we will be exploring the feasibility of adding additional features to our dApp to increase the overall utility. Creating a DAO for a decentralized governance and an on-chain governed treasury fueled by revenues from royalties to fund public goods and ecosystem development is also a feasable option for the future.
 
 Potential future features could include:
 

@@ -1,9 +1,12 @@
 import { usePolkadotProviderContext } from '@components/PolkadotProvider'
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
+import { ContractPromise } from '@polkadot/api-contract'
 import type { NextPage } from 'next'
 import { useState } from 'react'
 import { Button, Hero, Input, InputGroup } from 'react-daisyui'
 import { SubmitHandler, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { deployments } from 'src/deployments'
 import Typewriter from 'typewriter-effect'
 
 type Inputs = {
@@ -17,13 +20,42 @@ const SearchDomains: NextPage = () => {
     watch,
     formState: { errors },
   } = useForm<Inputs>()
-  const { api, account } = usePolkadotProviderContext()
+  const domain = watch('domain')
+  const { api, accounts, account } = usePolkadotProviderContext()
 
   const [available, setAvailable] = useState(true)
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
-    const { domain } = data
-    if (!domain || !account) return
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
+    if (!domain) {
+      toast.error('No Domain given')
+      return
+    }
+    if (!account || !api) {
+      toast.error('Wallet not connected')
+      return
+    }
+
+    const { web3FromSource } = await import('@polkadot/extension-dapp')
+    const contract = new ContractPromise(api, await deployments.azns.abi, deployments.azns.address)
+    const injector = await web3FromSource(account.meta.source)
+    console.log('injector.signer', injector.signer)
+    api?.setSigner(injector.signer)
+    const tsx = await contract.tx
+      .register({ value: 0, gasLimit: -1 }, domain)
+      .signAndSend(account.address, (result) => {
+        console.log({ result })
+      })
+
+    console.log(tsx)
+    // if (injector !== undefined) {
+    //   flip.signAndSend(performingAccount.address, { signer: injector.signer }, (result) => {
+    //     if (result.status.isInBlock) {
+    //       setResult('in a block')
+    //     } else if (result.status.isFinalized) {
+    //       setResult('finalized')
+    //     }
+    //   })
+    // }
 
     // const getFlipValue = async () => {
     //   const contract = new ContractPromise(api, abi, contractAddress)
@@ -54,8 +86,6 @@ const SearchDomains: NextPage = () => {
     //     })
     //   }
     // }
-
-    console.log(domain)
   }
 
   console.log(watch('domain')) // watch input value by passing the name of it
@@ -96,7 +126,7 @@ const SearchDomains: NextPage = () => {
             <span>.azero</span>
           </InputGroup>
         </div>
-        <Button type="submit" color="primary" size="lg">
+        <Button type="submit" color="primary" size="lg" disabled={!domain}>
           Search
         </Button>
       </form>

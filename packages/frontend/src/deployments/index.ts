@@ -1,6 +1,6 @@
 export const deployments = {
-  ContractABC: {
-    abi: import('./ContractABC.json'),
-    address: '0x123',
+  azns: {
+    abi: import('./azns.json'),
+    address: '5DCXpgFsQiMEekLSJfbU1QnN1dbuCrTcTxfXPzjvDBc1LpSq',
   },
 }

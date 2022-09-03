@@ -5,7 +5,7 @@ import { createContext, FC, PropsWithChildren, useContext, useEffect, useState }
 export type PolkadotProviderContextType = {
   accounts?: InjectedAccountWithMeta[]
   account?: InjectedAccountWithMeta
-  api?: any
+  api?: ApiPromise
   setup?: () => Promise<void>
 }
 export const PolkadotProviderContext = createContext<PolkadotProviderContextType>({})
@@ -23,9 +23,9 @@ export const PolkadotProvider: FC<PropsWithChildren> = ({ children }) => {
     const { web3Accounts, web3Enable } = await import('@polkadot/extension-dapp')
     const extensions = await web3Enable('azero.domains')
     if (extensions.length === 0) return
-    const account = await web3Accounts()
-    setAccounts(account)
-    setAccount(!!accounts?.length ? accounts[0] : undefined)
+    const _accounts = await web3Accounts()
+    setAccounts(_accounts)
+    setAccount(!!_accounts?.length ? _accounts[0] : undefined)
   }
 
   const setup = async () => {

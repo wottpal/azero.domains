@@ -32,6 +32,7 @@ const SearchDomains: NextPage = () => {
   const [isAvailableDomain, setAvailableDomain] = useState<string>()
   const [isAvailableDomainOwner, setAvailableDomainOwner] = useState<string>()
   const [availableDomainIsYours, setAvailableDomainIsYours] = useState(false)
+  const [domainMetadata, setDomainMetadata] = useState<{ [key: string]: string }>({})
 
   const [checkIsLoading, setCheckIsLoading] = useState<boolean>(false)
   const [buyIsLoading, setBuyIsLoading] = useState<boolean>(false)
@@ -49,34 +50,45 @@ const SearchDomains: NextPage = () => {
     setCheckIsLoading(true)
 
     try {
-      const { web3FromSource } = await import('@polkadot/extension-dapp')
       const contract = new ContractPromise(
         api,
         await deployments.azns.abi,
         deployments.azns.address
       )
-      const injector = await web3FromSource(account.meta.source)
-      if (!injector?.signer) {
-        toast.error('No signer')
-        return
-      }
-      const { result, output } = await contract.query.getOwner(
+      const { result: ownerResult, output: ownerOutput } = await contract.query.getOwner(
         account.address,
         { gasLimit: -1 },
         domain
       )
-      const owner = output?.toHuman() as any
-      if (result.isOk && !output?.isEmpty && owner) {
-        setAvailable(false)
-        setAvailableDomain(domain)
-        setAvailableDomainOwner(owner)
-        setAvailableDomainIsYours(owner === account.address)
-      } else {
+      const owner = ownerOutput?.toHuman() as any
+      if (!ownerResult.isOk || ownerOutput?.isEmpty || !owner) {
         setAvailable(true)
         setAvailableDomain(domain)
         setAvailableDomainOwner(undefined)
         setAvailableDomainIsYours(false)
+        setDomainMetadata({})
+        return
       }
+      setAvailable(false)
+      setAvailableDomain(domain)
+      setAvailableDomainOwner(owner)
+      setAvailableDomainIsYours(owner === account.address)
+
+      // Fetch Metadata
+      const { result: metadataResult, output: metadataOutput } = await contract.query.getAllRecords(
+        account.address,
+        { gasLimit: -1 },
+        domain
+      )
+      const fetchedMetadata: string[][] = (metadataOutput?.toHuman() as any)?.['Ok'] || []
+      const metadata = fetchedMetadata.reduce((acc: any, val: any) => {
+        if (!val?.[0] || !val?.[1]) return acc
+        return {
+          ...acc,
+          [val[0]]: val[1],
+        }
+      }, {})
+      setDomainMetadata(metadata)
     } catch (e) {
       console.error('Error while checking', e)
       toast.error('Error while checking. Try again.')

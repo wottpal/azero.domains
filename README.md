@@ -47,21 +47,21 @@ pnpm run deploy
 
 Web3 and the overall Crypto ecosystem need to strive for simplicity and the best user experience possible. One significant improvement to achieve this goal has been the introduction of the Ethererum domains by the Ethereum Name Service (ENS). Thereby, the representation of the wallet address consisting of arbitrary characters is abstracted away with a simple domain identifier.
 
-Aleph Zero is an L1 blockchain whose technical specifications offer a new level of user experience with near-to-zero transaction costs and sub-second transaction finality. We believe that we can enhance the UX even more by introducing our decentralized **.azero** domains.
+Aleph Zero is an L1 blockchain whose technical specifications offer a new level of user experience with near-zero transaction costs and sub-second transaction finality. We believe that we can enhance the UX even more by introducing our decentralized **.azero** domains.
 
-This innovation will make it easier for users to navigate the Aleph Zero ecosystem. The domain reduces human error. Sending a transaction to the wrong **.azero** domain is less likely than with an address in hexadecimal characters. This reduces the fear of new users interacting with the web3 ecosystem. Further, using our domains makes sending payments and any other interactions more efficient and convenient.
+This innovation will make it easier for users to navigate the Aleph Zero ecosystem. The simplicity of domain names reduce human error compared to inputting long addresses. Sending a transaction to the wrong **.azero** domain is less likely than with an address in hexadecimal representation. This reduces the anxiety of new users interacting with the web3 ecosystem. Furthermore, using our domains makes sending payments and any other interactions more efficient and convenient.
 
 ## What it does
 
-We deployed Rust-based smart contracts on Aleph Zero testnet that contain a decentralized domain registry as wall as an attached metadata storage. Our **https://azero.domains** dApp leverages those contracts and gives the user the ability to search, buy, and manage domains. The frontend interacting with the smart contracts is deployed on the Permaweb network by Arweave for maximum censorship resistance.
+We deployed Rust-based smart contracts on Aleph Zero testnet that contain a decentralized domain registry as well as an attached metadata storage. Our **https://azero.domains** dApp leverages those contracts and gives the user the ability to search, buy, and manage domains. The frontend interacting with the smart contracts is deployed on the Permaweb network by Arweave for maximum censorship resistance.
 
-The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is still available with the search function. If yes, he can purchase & claim the domain in just one click. If the user is not yet connected with his wallet, he will be redirected to do so. After the successfull purchase with $TAZERO tokens, the user's new domain is shown in his dashboard. He now has the option to 'manage' or 'release' any possessed domain. Managing the domain allows for storing metadata such as social handles (e.g. Twitter, Discord, Telegram, or Lens Protocol). The dApp will also provide a sharable, dynamic visual representation of the new domain and the added social handles in form of a contact card. Thereby, our domain system also works as a contact book for all your friends in web3.
+The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is available with the search function. If yes, he can purchase & claim the domain in just one click. If the user has not yet connected his wallet to the dapp, he will be prompted to do so. After a successfull purchase with $TAZERO tokens, the user's new domain is shown in his dashboard. He now has the option to 'manage' or 'release' any possessed domain. Managing the domain allows for storing metadata such as social handles (e.g. Twitter, Discord, Telegram, or Lens Protocol), personal website URL or any other arbitrary data. The dApp also provides a shareable, dynamic visual representation of the new domain and the added social handles in form of a contact card. This feature lets the user share his .azero domain as a contact card.
 
 ## How we built it
 
 ### Frontend
 
-For the frontend we used `Next.js` as a framework, with it's many production ready features like page-based routing and the possiblity to easily export
+For the frontend we used `Next.js` as a framework, with its many production ready features like filesystem-based routing and the possiblity to easily export
 
 Frontend:
 Dennis :

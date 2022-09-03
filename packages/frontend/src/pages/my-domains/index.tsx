@@ -48,7 +48,21 @@ const MyDomains: NextPage = () => {
   }, [account])
 
   if (domainsIsLoading) return <Spinner />
-  if (!domainsIsLoading && !myDomains?.length) return <ConnectInfo />
+  if (!domainsIsLoading && !account) return <ConnectInfo />
+  if (!domainsIsLoading && myDomains?.length === 0)
+    return (
+      <div className="flex flex-col items-center justify-center overflow-x-auto my-28">
+        <div className="text-xl text-center max-w-prose mb-10 ">
+          You do not have any domains yet..
+        </div>
+        <div>
+          <Link href="/">
+            <a className="btn btn-primary">Buy first domain</a>
+          </Link>
+        </div>
+      </div>
+    )
+  console.log(myDomains)
 
   return (
     <div className="flex flex-col items-center justify-center overflow-x-auto">

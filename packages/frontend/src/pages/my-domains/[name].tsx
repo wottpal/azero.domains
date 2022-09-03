@@ -59,12 +59,10 @@ const ManageDomain: NextPage = () => {
       )
       const owner = output?.toHuman() as any
       if (!result.isOk || output?.isEmpty || !owner) {
-        console.log('here1')
         routeToFallback(`Domain '${domain}' doesn't have an owner yet. Go buy it!`, '/')
         return
       }
       if (owner !== account.address) {
-        console.log('here2')
         routeToFallback()
         return
       }

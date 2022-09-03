@@ -1,6 +1,6 @@
 export const deployments = {
   azns: {
     abi: import('./azns.json'),
-    address: '5CQhtb1Q29ZyvcCC3oRWwsgBee2DY2HWQqXhiHHXxEMY65vs',
+    address: '5FmcPCufMVZ7pEGDTgg65w4HDMuxF1B1qbTkCoKuR7CSfuUf',
   },
 }

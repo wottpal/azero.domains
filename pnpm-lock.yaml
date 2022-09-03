@@ -29,6 +29,7 @@ importers:
       '@emotion/server': ^11.10.0
       '@emotion/styled': ^11.10.4
       '@headlessui/react': ^1.6.6
+      '@heroicons/react': ^2.0.10
       '@tailwindcss/typography': ^0.5.4
       '@testing-library/react': ^13.3.0
       '@types/downloadjs': ^1.4.3
@@ -83,6 +84,7 @@ importers:
       '@emotion/server': 11.10.0_@emotion+css@11.10.0
       '@emotion/styled': 11.10.4_qzbwge7tbhs2ordiiw7o6wknfm
       '@headlessui/react': 1.6.6_biqbaboplfbrettd7655fr4n2y
+      '@heroicons/react': 2.0.10_react@18.2.0
       autoprefixer: 10.4.8_postcss@8.4.16
       axios: 0.27.2
       cookies-next: 2.1.1
@@ -1832,6 +1834,14 @@ packages:
     dependencies:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /@heroicons/react/2.0.10_react@18.2.0:
+    resolution: {integrity: sha512-Ufr+pgAElNiRCSklnHGOR10bXb02BLlosvbDK7sCRUMOcQ3R/HCXTfXs4BUkYZ4dKpx6l5dUD06VSW1dTpTEDw==}
+    peerDependencies:
+      react: '>= 16 || ^18.0.0'
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /@humanwhocodes/config-array/0.10.4:

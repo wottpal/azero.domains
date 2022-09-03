@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { FC, PropsWithChildren } from 'react'
-import { Button, Dropdown, Menu, Navbar } from 'react-daisyui'
+import { Button, Menu, Navbar } from 'react-daisyui'
 
 export const Navigation: FC<PropsWithChildren> = ({ children }) => {
   return (
@@ -8,7 +8,8 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
       <div className="pb-40 flex w-full component-preview p-4 items-center justify-center gap-2 font-sans">
         <Navbar>
           <Navbar.Start>
-            <Dropdown>
+            {/* TODO: Convert to Healdess UI */}
+            {/* <Dropdown>
               <Button color="ghost" tabIndex={0} className="lg:hidden">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -37,7 +38,7 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
                   </Link>
                 </Dropdown.Item>
               </Dropdown.Menu>
-            </Dropdown>
+            </Dropdown> */}
             <a className="btn btn-ghost normal-case text-xl">azero Domains</a>
           </Navbar.Start>
           <Navbar.Center className="hidden lg:flex">

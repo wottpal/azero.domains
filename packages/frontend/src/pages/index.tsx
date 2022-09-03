@@ -1,12 +1,14 @@
 import { Confetti } from '@components/Confetti'
-import { Faq } from '@components/FAQ'
+import { Faq } from '@components/Faq'
 import { usePolkadotProviderContext } from '@components/PolkadotProvider'
 import { CheckBadgeIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import { ContractPromise } from '@polkadot/api-contract'
 import { truncateHash } from '@shared/truncateHash'
+import { picasso } from '@vechain/picasso'
 import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useState } from 'react'
+import Card from 'react-animated-3d-card'
 import { Button, Hero, Input, InputGroup } from 'react-daisyui'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
@@ -216,6 +218,27 @@ const SearchDomains: NextPage = () => {
         </div>
       )}
       {showConfetti && <Confetti />}
+      <div className="flex flex-col items-center mt-10">
+        <Card
+          style={{
+            background: '#ddd',
+            width: '400px',
+            height: '250px',
+            cursor: 'pointer',
+          }}
+          onClick={() => console.log('Card clicked')}
+        >
+          <div
+            className="w-24 h-24 rounded-full m-2"
+            style={{
+              background: `no-repeat url('data:image/svg+xml;utf8,${picasso(
+                '0xf6e78a5584c06e2dec5c675d357f050a5402a730'
+              )}')`,
+              backgroundSize: `100%`,
+            }}
+          />
+        </Card>
+      </div>
       <Faq />
     </div>
   )

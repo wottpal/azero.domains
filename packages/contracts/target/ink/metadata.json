@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0xfb78b15506e64621b2b4cf81fadd06c00fb7a9e60155041c1e8693df38940a8c",
+    "hash": "0x3907a46c2dd7a84ff80efc81d37c83fcb2fe741bf29ced13e6e3563e39d97286",
     "language": "ink! 3.3.1",
     "compiler": "rustc 1.65.0-nightly"
   },
@@ -417,13 +417,12 @@
         {
           "args": [
             {
-              "label": "owner",
+              "label": "name",
               "type": {
                 "displayName": [
-                  "ink_env",
-                  "AccountId"
+                  "String"
                 ],
-                "type": 2
+                "type": 1
               }
             },
             {
@@ -453,6 +452,15 @@
         {
           "args": [
             {
+              "label": "name",
+              "type": {
+                "displayName": [
+                  "String"
+                ],
+                "type": 1
+              }
+            },
+            {
               "label": "records",
               "type": {
                 "displayName": [
@@ -463,24 +471,28 @@
             }
           ],
           "docs": [
-            " Sets an arbitrary record"
+            " Sets all records"
           ],
           "label": "set_all_records",
           "mutates": true,
           "payable": false,
-          "returnType": null,
+          "returnType": {
+            "displayName": [
+              "Result"
+            ],
+            "type": 13
+          },
           "selector": "0x87c4abc2"
         },
         {
           "args": [
             {
-              "label": "owner",
+              "label": "name",
               "type": {
                 "displayName": [
-                  "ink_env",
-                  "AccountId"
+                  "String"
                 ],
-                "type": 2
+                "type": 1
               }
             }
           ],
@@ -726,7 +738,7 @@
           "params": [
             {
               "name": "K",
-              "type": 2
+              "type": 1
             },
             {
               "name": "V",

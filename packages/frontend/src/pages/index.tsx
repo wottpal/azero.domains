@@ -126,14 +126,14 @@ const SearchDomains: NextPage = () => {
   }
 
   return (
-    <div className="pt-20">
+    <div className="pt-14">
       <Hero>
         <Hero.Content className="text-center">
           <div className="max-w-2xl">
             <h1 className="text-5xl font-bold">
               Pick your favorite domain
               <br />
-              <span className="mt-3 font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content block">
+              <span className="mt-4 font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content block">
                 <Typewriter
                   options={{
                     strings: [

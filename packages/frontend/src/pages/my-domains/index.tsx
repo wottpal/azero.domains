@@ -6,12 +6,14 @@ import type { NextPage } from 'next'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Table } from 'react-daisyui'
+import toast from 'react-hot-toast'
 import { deployments } from 'src/deployments'
 
 const MyDomains: NextPage = () => {
   const [myDomains, setMyDomains] = useState<string[]>([])
   const { api, account } = usePolkadotProviderContext()
   const [domainsIsLoading, setDomainsIsLoading] = useState<boolean>(true)
+  const [releaseIsLoading, setReleaseIsLoading] = useState<boolean>(false)
 
   // Fetch domains for connected account
   const fetchMyDomains = async () => {
@@ -47,9 +49,42 @@ const MyDomains: NextPage = () => {
     fetchMyDomains()
   }, [account])
 
-  if (domainsIsLoading) return <Spinner />
-  if (!domainsIsLoading && !account) return <ConnectInfo />
-  if (!domainsIsLoading && myDomains?.length === 0)
+  // Release Domain
+  const releaseDomain = async (domain: string) => {
+    if (!domain) return
+    if (!account || !api) {
+      toast.error('Wallet not connected')
+      return
+    }
+    setReleaseIsLoading(true)
+    try {
+      const { web3FromSource } = await import('@polkadot/extension-dapp')
+      const contract = new ContractPromise(
+        api,
+        await deployments.azns.abi,
+        deployments.azns.address
+      )
+      const injector = await web3FromSource(account.meta.source)
+      if (!injector?.signer) {
+        toast.error('No signer')
+        setReleaseIsLoading(false)
+        return
+      }
+      api.setSigner(injector.signer)
+      await contract.tx.release({ value: 0, gasLimit: -1 }, domain).signAndSend(account.address)
+      toast.success(`Successfully released domain`)
+    } catch (e) {
+      console.error('Error while releasing domain', e)
+      toast.error('Error while releasing domain. Try again.')
+    } finally {
+      setReleaseIsLoading(false)
+      fetchMyDomains()
+    }
+  }
+
+  if (domainsIsLoading || releaseIsLoading) return <Spinner />
+  if (!account) return <ConnectInfo />
+  if (myDomains?.length === 0)
     return (
       <div className="flex flex-col items-center justify-center overflow-x-auto my-28">
         <div className="text-xl text-center max-w-prose mb-10 ">
@@ -62,14 +97,13 @@ const MyDomains: NextPage = () => {
         </div>
       </div>
     )
-  console.log(myDomains)
 
   return (
     <div className="flex flex-col items-center justify-center overflow-x-auto">
       <h1 className="pb-12 text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content">
         Domain Overview
       </h1>
-      <Table className=" rounded">
+      <Table className="rounded">
         <Table.Head className="bg-primary/70">
           <span />
           <span>Domains</span>
@@ -79,14 +113,24 @@ const MyDomains: NextPage = () => {
         <Table.Body>
           {myDomains.map((domain, index) => (
             <Table.Row className="bg-base-200" key={`${index}-${domain}`} hover>
-              <span>{index + 1}</span>
+              <span>#{index + 1}</span>
               <span>{domain}</span>
               <span>
                 <div className="flex space-x-4">
                   <Link href={`my-domains/${domain}`}>
                     <a className="btn btn-sm">Manage</a>
                   </Link>
-                  <button className="btn btn-error btn-sm text-base-content">Release Domain</button>
+                  <button
+                    className="btn btn-error btn-sm text-base-content"
+                    onClick={() => {
+                      const isConfirmed = confirm(
+                        `Are you sure you want to release '${domain}'? This action can't be undone.`
+                      )
+                      if (isConfirmed) releaseDomain(domain)
+                    }}
+                  >
+                    Release Domain
+                  </button>
                 </div>
               </span>
             </Table.Row>

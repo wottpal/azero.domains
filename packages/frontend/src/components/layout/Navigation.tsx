@@ -7,6 +7,17 @@ import aznsLogoTransparent from '../../../public/icons/azns_logo_transparent.svg
 export const Navigation: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
+      <div className=" bg-base-200 bg-opacity-20 text-center text-gray-300  mx-auto py-2 px-4 mb-2">
+        <a
+          href="https://twitter.com/azerodomains"
+          target="_blank"
+          className="underline font-semibold "
+        >
+          Follow us on Twitter
+        </a>{' '}
+        to get notified when you can claim your mainnet handle.
+      </div>
+
       <div className="pb-24 flex w-full component-preview p-4 items-center justify-center gap-2 font-sans">
         <Navbar>
           <Navbar.Start>

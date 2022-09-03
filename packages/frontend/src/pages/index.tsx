@@ -1,4 +1,5 @@
 import { Confetti } from '@components/Confetti'
+import { Faq } from '@components/FAQ'
 import { usePolkadotProviderContext } from '@components/PolkadotProvider'
 import { CheckBadgeIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import { ContractPromise } from '@polkadot/api-contract'
@@ -24,7 +25,7 @@ const SearchDomains: NextPage = () => {
     formState: { errors },
   } = useForm<Inputs>()
   const domain = watch('domain')
-  const { api, accounts, account } = usePolkadotProviderContext()
+  const { api, accounts, account, setup } = usePolkadotProviderContext()
   const [isAvailable, setAvailable] = useState(false)
   const [isAvailableDomain, setAvailableDomain] = useState<string>()
   const [isAvailableDomainOwner, setAvailableDomainOwner] = useState<string>()
@@ -108,11 +109,9 @@ const SearchDomains: NextPage = () => {
         return
       }
       api.setSigner(injector.signer)
-      const tsx = await contract.tx
-        .register({ value: 0, gasLimit: -1 }, isAvailableDomain)
-        .signAndSend(account.address, (result) => {
-          console.log({ result })
-        })
+      await contract.tx
+        .register({ value: 50000000000000, gasLimit: -1 }, isAvailableDomain)
+        .signAndSend(account.address)
       toast.success(`Successfully bought ${isAvailableDomain}.azero`)
       setShowConfetti(true)
       setAvailable(false)
@@ -187,7 +186,7 @@ const SearchDomains: NextPage = () => {
                   loading={buyIsLoading}
                   onClick={buyAvailableDomain}
                 >
-                  Buy Domain for 50 $AZERO
+                  Buy Domain for 50 $TAZERO
                 </Button>
               </div>
             </>
@@ -217,6 +216,7 @@ const SearchDomains: NextPage = () => {
         </div>
       )}
       {showConfetti && <Confetti />}
+      <Faq />
     </div>
   )
 }

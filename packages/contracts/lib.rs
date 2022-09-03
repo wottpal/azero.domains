@@ -1,9 +1,12 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+extern crate alloc;
+
 use ink_lang as ink;
 
 #[ink::contract]
 mod dns {
+    use alloc::string::String;
     use ink_storage::{
         traits::SpreadAllocate,
         Mapping,
@@ -13,7 +16,7 @@ mod dns {
     #[ink(event)]
     pub struct Register {
         #[ink(topic)]
-        name: Hash,
+        name: String,
         #[ink(topic)]
         from: AccountId,
     }
@@ -22,7 +25,7 @@ mod dns {
     #[ink(event)]
     pub struct Release {
         #[ink(topic)]
-        name: Hash,
+        name: String,
         #[ink(topic)]
         from: AccountId,
     }
@@ -31,7 +34,7 @@ mod dns {
     #[ink(event)]
     pub struct SetAddress {
         #[ink(topic)]
-        name: Hash,
+        name: String,
         from: AccountId,
         #[ink(topic)]
         old_address: Option<AccountId>,
@@ -43,7 +46,7 @@ mod dns {
     #[ink(event)]
     pub struct Transfer {
         #[ink(topic)]
-        name: Hash,
+        name: String,
         from: AccountId,
         #[ink(topic)]
         old_owner: Option<AccountId>,
@@ -69,10 +72,10 @@ mod dns {
     #[ink(storage)]
     #[derive(Default, SpreadAllocate)]
     pub struct DomainNameService {
-        /// A hashmap to store all name to addresses mapping.
-        name_to_address: Mapping<Hash, AccountId>,
-        /// A hashmap to store all name to owners mapping.
-        name_to_owner: Mapping<Hash, AccountId>,
+        /// A Stringmap to store all name to addresses mapping.
+        name_to_address: Mapping<String, AccountId>,
+        /// A Stringmap to store all name to owners mapping.
+        name_to_owner: Mapping<String, AccountId>,
         /// The default address.
         default_address: AccountId,
     }
@@ -103,7 +106,7 @@ mod dns {
 
         /// Register specific name with caller as owner.
         #[ink(message)]
-        pub fn register(&mut self, name: Hash) -> Result<()> {
+        pub fn register(&mut self, name: String) -> Result<()> {
             let caller = self.env().caller();
             if self.name_to_owner.contains(&name) {
                 return Err(Error::NameAlreadyExists)
@@ -117,9 +120,9 @@ mod dns {
 
         /// Release domain from registration.
         #[ink(message)]
-        pub fn release(&mut self, name: Hash) -> Result<()> {
+        pub fn release(&mut self, name: String) -> Result<()> {
             let caller = self.env().caller();
-            let owner = self.get_owner_or_default(name);
+            let owner = self.get_owner_or_default(&name);
             if caller != owner {
                 return Err(Error::CallerIsNotOwner)
             }
@@ -133,14 +136,14 @@ mod dns {
 
         /// Set address for specific name.
         #[ink(message)]
-        pub fn set_address(&mut self, name: Hash, new_address: AccountId) -> Result<()> {
+        pub fn set_address(&mut self, name: String, new_address: AccountId) -> Result<()> {
             let caller = self.env().caller();
-            let owner = self.get_owner_or_default(name);
+            let owner = self.get_owner_or_default(&name);
             if caller != owner {
                 return Err(Error::CallerIsNotOwner)
             }
 
-            let old_address = self.name_to_address.get(name);
+            let old_address = self.name_to_address.get(&name);
             self.name_to_address.insert(&name, &new_address);
 
             self.env().emit_event(SetAddress {
@@ -154,9 +157,9 @@ mod dns {
 
         /// Transfer owner to another address.
         #[ink(message)]
-        pub fn transfer(&mut self, name: Hash, to: AccountId) -> Result<()> {
+        pub fn transfer(&mut self, name: String, to: AccountId) -> Result<()> {
             let caller = self.env().caller();
-            let owner = self.get_owner_or_default(name);
+            let owner = self.get_owner_or_default(&name);
             if caller != owner {
                 return Err(Error::CallerIsNotOwner)
             }
@@ -176,25 +179,25 @@ mod dns {
 
         /// Get address for specific name.
         #[ink(message)]
-        pub fn get_address(&self, name: Hash) -> AccountId {
+        pub fn get_address(&self, name: String) -> AccountId {
             self.get_address_or_default(name)
         }
 
         /// Get owner of specific name.
         #[ink(message)]
-        pub fn get_owner(&self, name: Hash) -> AccountId {
-            self.get_owner_or_default(name)
+        pub fn get_owner(&self, name: String) -> AccountId {
+            self.get_owner_or_default(&name)
         }
 
-        /// Returns the owner given the hash or the default address.
-        fn get_owner_or_default(&self, name: Hash) -> AccountId {
+        /// Returns the owner given the String or the default address.
+        fn get_owner_or_default(&self, name: &String) -> AccountId {
             self.name_to_owner
                 .get(&name)
                 .unwrap_or(self.default_address)
         }
 
-        /// Returns the address given the hash or the default address.
-        fn get_address_or_default(&self, name: Hash) -> AccountId {
+        /// Returns the address given the String or the default address.
+        fn get_address_or_default(&self, name: String) -> AccountId {
             self.name_to_address
                 .get(&name)
                 .unwrap_or(self.default_address)
@@ -218,19 +221,19 @@ mod dns {
         #[ink::test]
         fn register_works() {
             let default_accounts = default_accounts();
-            let name = Hash::from([0x99; 32]);
+            let name = String::from([0x99; 32]);
 
             set_next_caller(default_accounts.alice);
             let mut contract = DomainNameService::new();
 
             assert_eq!(contract.register(name), Ok(()));
-            assert_eq!(contract.register(name), Err(Error::NameAlreadyExists));
+            assert_eq!(contract.register(&name), Err(Error::NameAlreadyExists));
         }
 
         #[ink::test]
         fn release_works() {
             let default_accounts = default_accounts();
-            let name = Hash::from([0x99; 32]);
+            let name = String::from([0x99; 32]);
 
             set_next_caller(default_accounts.alice);
             let mut contract = DomainNameService::new();
@@ -257,7 +260,7 @@ mod dns {
         #[ink::test]
         fn set_address_works() {
             let accounts = default_accounts();
-            let name = Hash::from([0x99; 32]);
+            let name = String::from([0x99; 32]);
 
             set_next_caller(accounts.alice);
 
@@ -280,7 +283,7 @@ mod dns {
         #[ink::test]
         fn transfer_works() {
             let accounts = default_accounts();
-            let name = Hash::from([0x99; 32]);
+            let name = String::from([0x99; 32]);
 
             set_next_caller(accounts.alice);
 

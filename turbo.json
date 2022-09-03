@@ -4,15 +4,11 @@
   "pipeline": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "deployments/**", "artifacts/**", "typechain-types/**"]
+      "outputs": [".next/**"]
     },
-    "@ethathon/frontend#build": {
-      "dependsOn": ["@ethathon/contracts#build"],
-      "outputs": [".next/**", "deployments/**", "artifacts/**", "typechain-types/**"]
-    },
-    "@ethathon/frontend#dev": {
-      "dependsOn": ["@ethathon/contracts#build"],
-      "outputs": [".next/**", "deployments/**", "artifacts/**", "typechain-types/**"]
+    "dev": {
+      "dependsOn": ["^dev"],
+      "outputs": [".next/**"]
     },
     "lint": {
       "outputs": []

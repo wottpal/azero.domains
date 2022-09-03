@@ -8,7 +8,7 @@ const customStyles = css`
     scroll-behavior: smooth;
   }
   body {
-    ${tw`antialiased bg-black text-white`}
+    ${tw`antialiased`}
     ${tw`min-h-screen h-screen relative`}
   }
   #__next,
@@ -16,7 +16,7 @@ const customStyles = css`
     ${tw`h-full relative flex flex-col`}
   }
   #nprogress > .bar {
-    ${tw`bg-white`}
+    ${tw`bg-gray-800`}
   }
   #nprogress > .spinner {
     ${tw`hidden!`}

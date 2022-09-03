@@ -23,7 +23,6 @@
       "**/.yarn": true,
       "**/.turbo": true,
       "**/.next": true,
-      "**/packages/contracts/deployments": true
     },
     "search.useIgnoreFiles": true,
     "search.useGlobalIgnoreFiles": true,

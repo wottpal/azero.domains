@@ -19,11 +19,9 @@
       "@components/*": ["./src/components/*"],
       "@shared/*": ["./src/shared/*"],
       "@models/*": ["./src/models/*"],
-      "@styles/*": ["./src/styles/*"],
-      "@deployments/*": ["./src/deployments/*"]
+      "@styles/*": ["./src/styles/*"]
     }
   },
-  "references": [{ "path": "../contracts" }],
   "include": ["next-env.d.ts", "**/*.js", "**/*.ts", "**/*.tsx", "**/*.json"],
   "exclude": ["node_modules", ".next", "out"],
   "types": ["src/types"]

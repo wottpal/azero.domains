@@ -1,16 +1,13 @@
 import { Layout } from '@components/layout/Layout'
 import { cache } from '@emotion/css'
 import { CacheProvider } from '@emotion/react'
-import { RainbowKitProvider } from '@rainbow-me/rainbowkit'
 import '@rainbow-me/rainbowkit/styles.css'
-import { chains, wagmiClient } from '@shared/wagmiClient'
 import GlobalStyles from '@styles/GlobalStyles'
 import type { AppProps } from 'next/app'
 import Head from 'next/head'
 import Router from 'next/router'
 import NProgress from 'nprogress'
 import { Toaster } from 'react-hot-toast'
-import { WagmiConfig } from 'wagmi'
 
 // Router Loading Animation with @tanem/react-nprogress
 Router.events.on('routeChangeStart', () => NProgress.start())
@@ -63,13 +60,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <CacheProvider value={cache}>
         <GlobalStyles />
 
-        <WagmiConfig client={wagmiClient}>
-          <RainbowKitProvider chains={chains}>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </RainbowKitProvider>
-        </WagmiConfig>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
 
         <Toaster />
       </CacheProvider>

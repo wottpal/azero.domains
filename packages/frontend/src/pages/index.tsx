@@ -109,11 +109,9 @@ const SearchDomains: NextPage = () => {
         return
       }
       api.setSigner(injector.signer)
-      const tsx = await contract.tx
-        .register({ value: 0, gasLimit: -1 }, isAvailableDomain)
-        .signAndSend(account.address, (result) => {
-          console.log({ result })
-        })
+      await contract.tx
+        .register({ value: 50000000000000, gasLimit: -1 }, isAvailableDomain)
+        .signAndSend(account.address)
       toast.success(`Successfully bought ${isAvailableDomain}.azero`)
       setShowConfetti(true)
       setAvailable(false)
@@ -188,7 +186,7 @@ const SearchDomains: NextPage = () => {
                   loading={buyIsLoading}
                   onClick={buyAvailableDomain}
                 >
-                  Buy Domain for 50 $AZERO
+                  Buy Domain for 50 $TAZERO
                 </Button>
               </div>
             </>

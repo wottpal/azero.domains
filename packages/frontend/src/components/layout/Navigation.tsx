@@ -40,7 +40,9 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown> */}
-            <a className="btn btn-ghost normal-case text-xl">azero Domains</a>
+            <a className="text-xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-secondary-content to-error">
+              AZERO DOMAINS
+            </a>
           </Navbar.Start>
           <Navbar.Center className="hidden lg:flex">
             <Menu horizontal className="p-0">

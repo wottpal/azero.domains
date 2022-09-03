@@ -48,6 +48,14 @@ pnpm run deploy
 
 ## Devpost Description 
 
+## Inspiration
+
+Web3 and the overall Crypto ecosystem need to strive for simplicity and the best user experience possible. One significant improvement to achieve this goal has been the introduction of the Ethererum domains by the Ethereum Name Service (ENS). Thereby, the representation of the wallet address consisting of hexadecimal characters is abstracted away with a simple domain. 
+
+Aleph Zero is an L1 blockchain whose technical specifications offer a new level of user experience with near-to-zero transaction costs and sub-second transaction finality. We believe that we can enhance the UX even more by introducing our decentralized **.azero** domains. 
+
+This innovation will make it easier for users to navigate the Aleph Zero ecosystem. The domain reduces human error. Sending a transaction to the wrong **.azero** domain is less likely than with an address in hexadecimal characters. This reduces the fear of new users interacting with the web3 ecosystem. Further, using our domains makes sending payments and any other interactions more efficient and convenient. 
+
 ## What it does
 
 The **azero-domains** dapp creates decentralized domains as NFTs on the Aleph Zero testnet. The frontend interacting with the smart contracts is deployed on the Arweave network for maximum censorship resistance. The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is still available with the search function. If yes, he can purchase & claim the domain in just one click. 

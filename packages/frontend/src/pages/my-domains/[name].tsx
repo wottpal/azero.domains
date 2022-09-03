@@ -112,7 +112,7 @@ const ManageDomain: NextPage = () => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="card w-[43rem] mb-12 bg-base-200 shadow-xl"
+        className="rounded-lg w-[43rem] mb-12 border shadow-xl"
       >
         <div className="card-body">
           <h2 className="pb-4 font-semibold text-primary text-2xl">{domain}.azero</h2>

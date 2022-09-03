@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* remove bg colors */
+.table tbody td,
+.table tbody th,
+.table thead th {
+  background-color: transparent;
+}
+/* remove row borders */
+.table * {
+  border: none;
+}

@@ -1,6 +1,6 @@
 {
   "source": {
-    "hash": "0xddd08eda6b3462f2112152b78aa896632711e3d9b0673c805740df80214e28c5",
+    "hash": "0xc924d72b50098dc0c75b1f15ba2a30675ce12a037823551efe9ff88cf8768be7",
     "language": "ink! 3.3.1",
     "compiler": "rustc 1.65.0-nightly"
   },
@@ -16,7 +16,17 @@
     "spec": {
       "constructors": [
         {
-          "args": [],
+          "args": [
+            {
+              "label": "fee",
+              "type": {
+                "displayName": [
+                  "Option"
+                ],
+                "type": 7
+              }
+            }
+          ],
           "docs": [
             "Creates a new domain name service contract."
           ],
@@ -46,6 +56,7 @@
               "label": "from",
               "type": {
                 "displayName": [
+                  "ink_env",
                   "AccountId"
                 ],
                 "type": 2
@@ -76,6 +87,7 @@
               "label": "from",
               "type": {
                 "displayName": [
+                  "ink_env",
                   "AccountId"
                 ],
                 "type": 2
@@ -106,6 +118,7 @@
               "label": "from",
               "type": {
                 "displayName": [
+                  "ink_env",
                   "AccountId"
                 ],
                 "type": 2
@@ -119,7 +132,7 @@
                 "displayName": [
                   "Option"
                 ],
-                "type": 9
+                "type": 11
               }
             },
             {
@@ -128,6 +141,7 @@
               "label": "new_address",
               "type": {
                 "displayName": [
+                  "ink_env",
                   "AccountId"
                 ],
                 "type": 2
@@ -158,6 +172,7 @@
               "label": "from",
               "type": {
                 "displayName": [
+                  "ink_env",
                   "AccountId"
                 ],
                 "type": 2
@@ -171,7 +186,7 @@
                 "displayName": [
                   "Option"
                 ],
-                "type": 9
+                "type": 11
               }
             },
             {
@@ -180,6 +195,7 @@
               "label": "new_owner",
               "type": {
                 "displayName": [
+                  "ink_env",
                   "AccountId"
                 ],
                 "type": 2
@@ -210,12 +226,12 @@
           ],
           "label": "register",
           "mutates": true,
-          "payable": false,
+          "payable": true,
           "returnType": {
             "displayName": [
               "Result"
             ],
-            "type": 6
+            "type": 8
           },
           "selector": "0x229b553f"
         },
@@ -241,7 +257,7 @@
             "displayName": [
               "Result"
             ],
-            "type": 6
+            "type": 8
           },
           "selector": "0x3f2be152"
         },
@@ -260,6 +276,7 @@
               "label": "new_address",
               "type": {
                 "displayName": [
+                  "ink_env",
                   "AccountId"
                 ],
                 "type": 2
@@ -276,7 +293,7 @@
             "displayName": [
               "Result"
             ],
-            "type": 6
+            "type": 8
           },
           "selector": "0xb8a4d3d9"
         },
@@ -295,6 +312,7 @@
               "label": "to",
               "type": {
                 "displayName": [
+                  "ink_env",
                   "AccountId"
                 ],
                 "type": 2
@@ -311,7 +329,7 @@
             "displayName": [
               "Result"
             ],
-            "type": 6
+            "type": 8
           },
           "selector": "0x84a15da1"
         },
@@ -335,6 +353,7 @@
           "payable": false,
           "returnType": {
             "displayName": [
+              "ink_env",
               "AccountId"
             ],
             "type": 2
@@ -361,6 +380,7 @@
           "payable": false,
           "returnType": {
             "displayName": [
+              "ink_env",
               "AccountId"
             ],
             "type": 2
@@ -398,6 +418,15 @@
               }
             },
             "name": "default_address"
+          },
+          {
+            "layout": {
+              "cell": {
+                "key": "0x0300000000000000000000000000000000000000000000000000000000000000",
+                "ty": 6
+              }
+            },
+            "name": "fee"
           }
         ]
       }
@@ -505,12 +534,53 @@
         "id": 6,
         "type": {
           "def": {
+            "primitive": "u128"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "type": {
+          "def": {
+            "variant": {
+              "variants": [
+                {
+                  "index": 0,
+                  "name": "None"
+                },
+                {
+                  "fields": [
+                    {
+                      "type": 6
+                    }
+                  ],
+                  "index": 1,
+                  "name": "Some"
+                }
+              ]
+            }
+          },
+          "params": [
+            {
+              "name": "T",
+              "type": 6
+            }
+          ],
+          "path": [
+            "Option"
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "type": {
+          "def": {
             "variant": {
               "variants": [
                 {
                   "fields": [
                     {
-                      "type": 7
+                      "type": 9
                     }
                   ],
                   "index": 0,
@@ -519,7 +589,7 @@
                 {
                   "fields": [
                     {
-                      "type": 8
+                      "type": 10
                     }
                   ],
                   "index": 1,
@@ -531,11 +601,11 @@
           "params": [
             {
               "name": "T",
-              "type": 7
+              "type": 9
             },
             {
               "name": "E",
-              "type": 8
+              "type": 10
             }
           ],
           "path": [
@@ -544,7 +614,7 @@
         }
       },
       {
-        "id": 7,
+        "id": 9,
         "type": {
           "def": {
             "tuple": []
@@ -552,7 +622,7 @@
         }
       },
       {
-        "id": 8,
+        "id": 10,
         "type": {
           "def": {
             "variant": {
@@ -564,6 +634,14 @@
                 {
                   "index": 1,
                   "name": "CallerIsNotOwner"
+                },
+                {
+                  "index": 2,
+                  "name": "FeeNotPaid"
+                },
+                {
+                  "index": 3,
+                  "name": "NameEmpty"
                 }
               ]
             }
@@ -576,7 +654,7 @@
         }
       },
       {
-        "id": 9,
+        "id": 11,
         "type": {
           "def": {
             "variant": {

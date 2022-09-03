@@ -127,7 +127,7 @@ const SearchDomains: NextPage = () => {
   }
 
   return (
-    <>
+    <div className="pt-20">
       <Hero>
         <Hero.Content className="text-center">
           <div className="max-w-2xl">
@@ -217,7 +217,7 @@ const SearchDomains: NextPage = () => {
         </div>
       )}
       {showConfetti && <Confetti />}
-    </>
+    </div>
   )
 }
 

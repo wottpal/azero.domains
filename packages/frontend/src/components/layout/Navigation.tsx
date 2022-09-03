@@ -6,7 +6,7 @@ import { Menu, Navbar } from 'react-daisyui'
 export const Navigation: FC<PropsWithChildren> = ({ children }) => {
   return (
     <>
-      <div className="pb-40 flex w-full component-preview p-4 items-center justify-center gap-2 font-sans">
+      <div className="pb-24 flex w-full component-preview p-4 items-center justify-center gap-2 font-sans">
         <Navbar>
           <Navbar.Start>
             {/* TODO: Convert to Healdess UI */}
@@ -40,9 +40,11 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
                 </Dropdown.Item>
               </Dropdown.Menu>
             </Dropdown> */}
-            <a className="text-xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content">
-              AZERO DOMAINS
-            </a>
+            <Link href={'/'}>
+              <a className="text-xl font-display font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content">
+                AZERO DOMAINS
+              </a>
+            </Link>
           </Navbar.Start>
           <Navbar.Center className="hidden lg:flex">
             <Menu horizontal className="p-0 space-x-4">

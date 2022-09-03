@@ -1,6 +1,7 @@
 import { usePolkadotProviderContext } from '@components/PolkadotProvider'
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import { ContractPromise } from '@polkadot/api-contract'
+import { truncateHash } from '@shared/truncateHash'
 import type { NextPage } from 'next'
 import { useState } from 'react'
 import { Button, Hero, Input, InputGroup } from 'react-daisyui'
@@ -22,8 +23,12 @@ const SearchDomains: NextPage = () => {
   } = useForm<Inputs>()
   const domain = watch('domain')
   const { api, accounts, account } = usePolkadotProviderContext()
+  const [isAvailable, setAvailable] = useState(false)
+  const [isAvailableDomain, setAvailableDomain] = useState<string>()
+  const [isAvailableDomainOwner, setAvailableDomainOwner] = useState<string>()
 
-  const [available, setAvailable] = useState(true)
+  const [checkIsLoading, setCheckIsLoading] = useState<boolean>(false)
+  const [buyIsLoading, setBuyIsLoading] = useState<boolean>(false)
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (!domain) {
@@ -34,61 +39,81 @@ const SearchDomains: NextPage = () => {
       toast.error('Wallet not connected')
       return
     }
+    setCheckIsLoading(true)
 
-    const { web3FromSource } = await import('@polkadot/extension-dapp')
-    const contract = new ContractPromise(api, await deployments.azns.abi, deployments.azns.address)
-    const injector = await web3FromSource(account.meta.source)
-    console.log('injector.signer', injector.signer)
-    api?.setSigner(injector.signer)
-    const tsx = await contract.tx
-      .register({ value: 0, gasLimit: -1 }, domain)
-      .signAndSend(account.address, (result) => {
-        console.log({ result })
-      })
-
-    console.log(tsx)
-    // if (injector !== undefined) {
-    //   flip.signAndSend(performingAccount.address, { signer: injector.signer }, (result) => {
-    //     if (result.status.isInBlock) {
-    //       setResult('in a block')
-    //     } else if (result.status.isFinalized) {
-    //       setResult('finalized')
-    //     }
-    //   })
-    // }
-
-    // const getFlipValue = async () => {
-    //   const contract = new ContractPromise(api, abi, contractAddress)
-    //   const { gasConsumed, result, output } = await contract.query.get(actingAddress, {
-    //     value: 0,
-    //     gasLimit: -1,
-    //   })
-    //   setGasConsumed(gasConsumed.toHuman())
-    //   setResult(JSON.stringify(result.toHuman()))
-    //   if (output !== undefined && output !== null) {
-    //     setOutcome(output.toHuman()?.toString() ?? '')
-    //   }
-    // }
-
-    // const changeFlipValue = async () => {
-    //   const { web3FromSource } = await import('@polkadot/extension-dapp')
-    //   const contract = new ContractPromise(api, abi, contractAddress)
-    //   const performingAccount = accounts[0]
-    //   const injector = await web3FromSource(performingAccount.meta.source)
-    //   const flip = await contract.tx.flip({ value: 0, gasLimit: -1 })
-    //   if (injector !== undefined) {
-    //     flip.signAndSend(performingAccount.address, { signer: injector.signer }, (result) => {
-    //       if (result.status.isInBlock) {
-    //         setResult('in a block')
-    //       } else if (result.status.isFinalized) {
-    //         setResult('finalized')
-    //       }
-    //     })
-    //   }
-    // }
+    try {
+      const { web3FromSource } = await import('@polkadot/extension-dapp')
+      const contract = new ContractPromise(
+        api,
+        await deployments.azns.abi,
+        deployments.azns.address
+      )
+      const injector = await web3FromSource(account.meta.source)
+      if (!injector?.signer) {
+        toast.error('No signer')
+        return
+      }
+      const { result, output } = await contract.query.getOwner(
+        account.address,
+        { gasLimit: -1 },
+        domain
+      )
+      const owner = output?.toHuman() as any
+      if (result.isOk && !output?.isEmpty && owner) {
+        setAvailable(false)
+        setAvailableDomain(domain)
+        setAvailableDomainOwner(owner)
+      } else {
+        setAvailable(true)
+        setAvailableDomain(domain)
+        setAvailableDomainOwner(undefined)
+      }
+    } catch (e) {
+      console.error('Error while checking', e)
+      toast.error('Error while checking. Try again.')
+    } finally {
+      setCheckIsLoading(false)
+    }
   }
 
-  console.log(watch('domain')) // watch input value by passing the name of it
+  const buyAvailableDomain = async () => {
+    if (!isAvailableDomain) {
+      toast.error('No available domain chosen')
+      return
+    }
+    if (!account || !api) {
+      toast.error('Wallet not connected')
+      return
+    }
+    setBuyIsLoading(true)
+
+    try {
+      const { web3FromSource } = await import('@polkadot/extension-dapp')
+      const contract = new ContractPromise(
+        api,
+        await deployments.azns.abi,
+        deployments.azns.address
+      )
+      const injector = await web3FromSource(account.meta.source)
+      if (!injector?.signer) {
+        toast.error('No signer')
+        setBuyIsLoading(false)
+        return
+      }
+      api.setSigner(injector.signer)
+      const tsx = await contract.tx
+        .register({ value: 0, gasLimit: -1 }, isAvailableDomain)
+        .signAndSend(account.address, (result) => {
+          console.log({ result })
+        })
+      toast.success(`Successfully bought ${isAvailableDomain}.azero`)
+    } catch (e) {
+      console.error('Error while buying', e)
+      toast.error('Error while buying. Try again.')
+    } finally {
+      setBuyIsLoading(false)
+    }
+  }
 
   return (
     <>
@@ -126,30 +151,40 @@ const SearchDomains: NextPage = () => {
             <span>.azero</span>
           </InputGroup>
         </div>
-        <Button type="submit" color="primary" size="lg" disabled={!domain}>
+        <Button type="submit" color="primary" size="lg" disabled={!domain} loading={checkIsLoading}>
           Search
         </Button>
       </form>
-      <div className="py-5 flex flex-col items-center justify-center">
-        {available ? (
-          <>
+      {!!isAvailableDomain && (
+        <div className="py-5 flex flex-col items-center justify-center">
+          {isAvailable && isAvailableDomain ? (
+            <>
+              <div className="flex justify-center items-center space-x-2">
+                <CheckCircleIcon className="h-7 w-7 text-success" />
+                <p className=" text-success">Domain is available</p>
+              </div>
+              <div className="py-8">
+                <Button
+                  variant="outline"
+                  size="md"
+                  loading={buyIsLoading}
+                  onClick={buyAvailableDomain}
+                >
+                  Buy Domain for 50 $AZERO
+                </Button>
+              </div>
+            </>
+          ) : (
             <div className="flex justify-center items-center space-x-2">
-              <CheckCircleIcon className="h-7 w-7 text-success" />
-              <p className=" text-success">Domain is available.</p>
+              <XCircleIcon className="h-7 w-7 text-error" />
+              <p className=" text-error">
+                Domain is taken by{' '}
+                <span className="font-mono">{truncateHash(isAvailableDomainOwner)}</span>
+              </p>
             </div>
-            <div className="py-8">
-              <Button variant="outline" size="md">
-                Buy Domain
-              </Button>
-            </div>
-          </>
-        ) : (
-          <div className="flex justify-center items-center space-x-2">
-            <XCircleIcon className="h-7 w-7 text-error" />
-            <p className=" text-error">Domain is taken.</p>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </>
   )
 }

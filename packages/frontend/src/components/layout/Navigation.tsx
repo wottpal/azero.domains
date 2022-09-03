@@ -51,7 +51,7 @@ export const Navigation: FC<PropsWithChildren> = ({ children }) => {
               </div>
             </Link>
           </Navbar.Start>
-          <Navbar.Center className="hidden lg:flex">
+          <Navbar.Center className="hidden md:flex">
             <Menu horizontal className="p-0 space-x-4">
               <Menu.Item>
                 <Link href="/">

@@ -1,4 +1,5 @@
 import { Confetti } from '@components/Confetti'
+import { Faq } from '@components/FAQ'
 import { usePolkadotProviderContext } from '@components/PolkadotProvider'
 import { CheckBadgeIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import { ContractPromise } from '@polkadot/api-contract'
@@ -24,7 +25,7 @@ const SearchDomains: NextPage = () => {
     formState: { errors },
   } = useForm<Inputs>()
   const domain = watch('domain')
-  const { api, accounts, account } = usePolkadotProviderContext()
+  const { api, accounts, account, setup } = usePolkadotProviderContext()
   const [isAvailable, setAvailable] = useState(false)
   const [isAvailableDomain, setAvailableDomain] = useState<string>()
   const [isAvailableDomainOwner, setAvailableDomainOwner] = useState<string>()
@@ -217,6 +218,7 @@ const SearchDomains: NextPage = () => {
         </div>
       )}
       {showConfetti && <Confetti />}
+      <Faq />
     </div>
   )
 }

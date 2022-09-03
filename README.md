@@ -58,7 +58,7 @@ This innovation will make it easier for users to navigate the Aleph Zero ecosyst
 
 ## What it does
 
-The **azero-domains** dapp creates decentralized domains as NFTs on the Aleph Zero testnet. The frontend interacting with the smart contracts is deployed on the Arweave network for maximum censorship resistance. The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is still available with the search function. If yes, he can purchase & claim the domain in just one click. 
+The **azero-domains** dapp creates decentralized domains as NFTs on the Aleph Zero testnet. The frontend interacting with the smart contracts is deployed on the Permaweb network by Arweave for maximum censorship resistance. The user journey with the Azero Domains app is as follows. First, the user checks if his desired domain is still available with the search function. If yes, he can purchase & claim the domain in just one click. If the user is not yet connected with his wallet, he will be redirected to do so. After the successfull purchase with TAZERO tokens, the user's new domain is shown in his dashboard. He now has the option to 'manage' or 'release' any possessed domain. Managing the domain allows for adding web2 social handles such as from Twitter, Discord or Telegram and from web3 networks such as Lens Protocol as metadata to the NFT. The dapp will also provide a dynamic visual representation of the new domain and the added social handles in form of a contact card. Thereby, our domain system also works as a contact book for all your friends in web3. 
 
 
 ## How we built it
@@ -69,25 +69,34 @@ For the frontend we used `Next.js` as a framework, with it's many production rea
 
 Dennis :
 
+### Contracts
+We used the ink! eDSL by Parity for Substrate-compatible smart contracts. Since ink! is just Rust with some macros and a WASM build target, even though we didn't have prior experience building SCs in Rust, we were able to quickly get productive by leveraging existing Rust infra and community.
+
 ## Challenges we ran into
 - Polkadot JS Implementation --> its weird
--  
+- Polkadot JS and UI is not ready for SSR
 
 ## Accomplishments that we're proud of
-- 
+- Building and deploying a working and well-tested naming and digital profile service in the span of one day.
+- Going from beginner Rust knowledge to being productive with ink!
+
+
 ## What we learned
-- How to write smart contracts with Ink! in Rust
+- How to write smart contracts for Substrate with ink!
+- How to leverage existing Rust infrastructure for testing and deploying ink! smart contracts
+- How to interface with the chain using Polkadot.js, including both reads and writes
+- 
 
 ## What's next for Azero Domains
+
+After the successfull testnet deplyoment during the hackathon, we are awaiting the samrt contract mainnet deployment by the Aleph Zero team to ship azero.domains on to mainnet with. 
 
 - integrating the following features:
 - marketplace?
 - trading of domains
-- NFT connection
+- NFT-compatiblity 
 
 Tech:
 - mainnet deployment
 - upgradable smart contracts
 - 
-
-

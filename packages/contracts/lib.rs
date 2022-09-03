@@ -18,6 +18,15 @@ mod dns {
         from: AccountId,
     }
 
+    /// Emitted whenever a new name is being registered.
+    #[ink(event)]
+    pub struct Release {
+        #[ink(topic)]
+        name: Hash,
+        #[ink(topic)]
+        from: AccountId,
+    }
+
     /// Emitted whenever an address changes.
     #[ink(event)]
     pub struct SetAddress {
@@ -102,6 +111,22 @@ mod dns {
 
             self.name_to_owner.insert(&name, &caller);
             self.env().emit_event(Register { name, from: caller });
+
+            Ok(())
+        }
+
+        /// Release domain from registration.
+        #[ink(message)]
+        pub fn release(&mut self, name: Hash) -> Result<()> {
+            let caller = self.env().caller();
+            let owner = self.get_owner_or_default(name);
+            if caller != owner {
+                return Err(Error::CallerIsNotOwner)
+            }
+
+            self.name_to_owner.remove(&name);
+            self.name_to_address.remove(&name);
+            self.env().emit_event(Release { name, from: caller });
 
             Ok(())
         }
@@ -200,6 +225,33 @@ mod dns {
 
             assert_eq!(contract.register(name), Ok(()));
             assert_eq!(contract.register(name), Err(Error::NameAlreadyExists));
+        }
+
+        #[ink::test]
+        fn release_works() {
+            let default_accounts = default_accounts();
+            let name = Hash::from([0x99; 32]);
+
+            set_next_caller(default_accounts.alice);
+            let mut contract = DomainNameService::new();
+
+            assert_eq!(contract.register(name), Ok(()));
+            assert_eq!(contract.set_address(name, default_accounts.alice), Ok(()));
+            assert_eq!(contract.get_owner(name), default_accounts.alice);
+            assert_eq!(contract.get_address(name), default_accounts.alice);
+            assert_eq!(contract.release(name), Ok(()));
+            assert_eq!(contract.get_owner(name), Default::default());
+            assert_eq!(contract.get_address(name), Default::default());
+
+            /* Another account can register again*/
+            set_next_caller(default_accounts.bob);
+            assert_eq!(contract.register(name), Ok(()));
+            assert_eq!(contract.set_address(name, default_accounts.bob), Ok(()));
+            assert_eq!(contract.get_owner(name), default_accounts.bob);
+            assert_eq!(contract.get_address(name), default_accounts.bob);
+            assert_eq!(contract.release(name), Ok(()));
+            assert_eq!(contract.get_owner(name), Default::default());
+            assert_eq!(contract.get_address(name), Default::default());
         }
 
         #[ink::test]

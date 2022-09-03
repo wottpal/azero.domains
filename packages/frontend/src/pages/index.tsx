@@ -1,8 +1,10 @@
+import { Confetti } from '@components/Confetti'
 import { usePolkadotProviderContext } from '@components/PolkadotProvider'
-import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
+import { CheckBadgeIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'
 import { ContractPromise } from '@polkadot/api-contract'
 import { truncateHash } from '@shared/truncateHash'
 import type { NextPage } from 'next'
+import Link from 'next/link'
 import { useState } from 'react'
 import { Button, Hero, Input, InputGroup } from 'react-daisyui'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -26,9 +28,11 @@ const SearchDomains: NextPage = () => {
   const [isAvailable, setAvailable] = useState(false)
   const [isAvailableDomain, setAvailableDomain] = useState<string>()
   const [isAvailableDomainOwner, setAvailableDomainOwner] = useState<string>()
+  const [availableDomainIsYours, setAvailableDomainIsYours] = useState(false)
 
   const [checkIsLoading, setCheckIsLoading] = useState<boolean>(false)
   const [buyIsLoading, setBuyIsLoading] = useState<boolean>(false)
+  const [showConfetti, setShowConfetti] = useState<boolean>(false)
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     if (!domain) {
@@ -63,10 +67,12 @@ const SearchDomains: NextPage = () => {
         setAvailable(false)
         setAvailableDomain(domain)
         setAvailableDomainOwner(owner)
+        setAvailableDomainIsYours(owner === account.address)
       } else {
         setAvailable(true)
         setAvailableDomain(domain)
         setAvailableDomainOwner(undefined)
+        setAvailableDomainIsYours(false)
       }
     } catch (e) {
       console.error('Error while checking', e)
@@ -86,6 +92,7 @@ const SearchDomains: NextPage = () => {
       return
     }
     setBuyIsLoading(true)
+    setShowConfetti(false)
 
     try {
       const { web3FromSource } = await import('@polkadot/extension-dapp')
@@ -107,6 +114,10 @@ const SearchDomains: NextPage = () => {
           console.log({ result })
         })
       toast.success(`Successfully bought ${isAvailableDomain}.azero`)
+      setShowConfetti(true)
+      setAvailable(false)
+      setAvailableDomainOwner(account.address)
+      setAvailableDomainIsYours(true)
     } catch (e) {
       console.error('Error while buying', e)
       toast.error('Error while buying. Try again.')
@@ -126,7 +137,13 @@ const SearchDomains: NextPage = () => {
               <span className="mt-3 font-display font-black text-transparent bg-clip-text bg-gradient-to-r from-primary to-base-content block">
                 <Typewriter
                   options={{
-                    strings: ['ethwarsaw.azero', 'antoni.azero', 'pepe.azero', 'adam.azero'],
+                    strings: [
+                      'ethwarsaw.azero',
+                      'wojak.azero',
+                      'antoni.azero',
+                      'pepe.azero',
+                      'adam.azero',
+                    ],
                     delay: 75,
                     cursorClassName: 'text-error',
                     loop: true,
@@ -176,15 +193,30 @@ const SearchDomains: NextPage = () => {
             </>
           ) : (
             <div className="flex justify-center items-center space-x-2">
-              <XCircleIcon className="h-7 w-7 text-error" />
-              <p className=" text-error">
-                Domain is taken by{' '}
-                <span className="font-mono">{truncateHash(isAvailableDomainOwner)}</span>
-              </p>
+              {availableDomainIsYours ? (
+                <>
+                  <CheckBadgeIcon className="h-7 w-7 text-success" />
+                  <p className="text-success">
+                    Domain is yours.{' '}
+                    <Link href={`/my-domains/${isAvailableDomain}`} passHref>
+                      <a className="underline font-bold">Manage it.</a>
+                    </Link>
+                  </p>
+                </>
+              ) : (
+                <>
+                  <XCircleIcon className="h-7 w-7 text-error" />
+                  <p className="text-error">
+                    Domain is taken by{' '}
+                    <span className="font-mono">{truncateHash(isAvailableDomainOwner)}</span>
+                  </p>
+                </>
+              )}
             </div>
           )}
         </div>
       )}
+      {showConfetti && <Confetti />}
     </>
   )
 }

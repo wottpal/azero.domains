@@ -66,14 +66,23 @@ The **azero-domains** dapp creates decentralized domains as NFTs on the Aleph Ze
 Frontend: 
 Dennis :
 
+### Contracts
+We used the ink! eDSL by Parity for Substrate-compatible smart contracts. Since ink! is just Rust with some macros and a WASM build target, even though we didn't have prior experience building SCs in Rust, we were able to quickly get productive by leveraging existing Rust infra and community.
+
 ## Challenges we ran into
 - Polkadot JS Implementation --> its weird
--  
+- Polkadot JS and UI is not ready for SSR
 
 ## Accomplishments that we're proud of
-- 
+- Building and deploying a working and well-tested naming and digital profile service in the span of one day.
+- Going from beginner Rust knowledge to being productive with ink!
+
+
 ## What we learned
-- How to write smart contracts with Ink! in Rust
+- How to write smart contracts for Substrate with ink!
+- How to leverage existing Rust infrastructure for testing and deploying ink! smart contracts
+- How to interface with the chain using Polkadot.js, including both reads and writes
+- 
 
 ## What's next for Azero Domains
 
@@ -82,11 +91,9 @@ After the successfull testnet deplyoment during the hackathon, we are awaiting t
 - integrating the following features:
 - marketplace?
 - trading of domains
-- NFT connection
+- NFT-compatiblity 
 
 Tech:
 - mainnet deployment
 - upgradable smart contracts
 - 
-
-

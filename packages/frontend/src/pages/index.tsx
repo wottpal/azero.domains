@@ -130,6 +130,7 @@ const SearchDomains: NextPage = () => {
       setAvailable(false)
       setAvailableDomainOwner(account.address)
       setAvailableDomainIsYours(true)
+      setDomainMetadata({})
     } catch (e) {
       console.error('Error while buying', e)
       toast.error('Error while buying. Try again.')
@@ -240,16 +241,16 @@ const SearchDomains: NextPage = () => {
               height: 'auto',
               cursor: 'pointer',
               padding: '1rem',
-              paddingTop: '2rem',
-              paddingBottom: '2rem',
+              paddingTop: '1rem',
+              paddingBottom: '1rem',
             }}
             onClick={() => console.log('Card clicked')}
-            key={`${isAvailableDomain}${JSON.stringify(domainMetadata)}`}
+            key={`${isAvailableDomain}${isAvailableDomainOwner}${JSON.stringify(domainMetadata)}`}
           >
-            <div className="pb-4 flex items-center justify-start">
+            <div className="flex items-center justify-start">
               {/* Identicon */}
               <div
-                className="w-24 h-24 rounded-full m-2"
+                className="w-24 h-24 rounded-full mr-4"
                 style={{
                   background: `no-repeat url('data:image/svg+xml;utf8,${picasso(
                     isAvailableDomainOwner || ''
@@ -264,7 +265,12 @@ const SearchDomains: NextPage = () => {
                 <p className="text-sm text-base-200/60">{truncateHash(isAvailableDomainOwner)}</p>
               </div>
             </div>
-            <div className="px-6 flex flex-col space-y-2">
+            <div
+              className="px-4 flex flex-col space-y-4"
+              style={{
+                paddingTop: Object.keys(domainMetadata || {})?.length ? '1rem' : '0',
+              }}
+            >
               {/* Twitter */}
               {domainMetadata?.twitter && (
                 <div className="flex items-center space-x-2">

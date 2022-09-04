@@ -73,11 +73,7 @@ const MyDomains: NextPage = () => {
       api.setSigner(injector.signer)
       await contract.tx.release({ value: 0, gasLimit: -1 }, domain).signAndSend(account.address)
       toast.success(`Successfully released domain`)
-      await Promise.resolve(() =>
-        setTimeout(() => {
-          /*i was here*/
-        }, 1500)
-      )
+      await new Promise((res) => setTimeout(res, 2000))
       fetchMyDomains()
     } catch (e) {
       console.error('Error while releasing domain', e)

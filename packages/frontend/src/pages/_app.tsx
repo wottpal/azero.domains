@@ -46,6 +46,15 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
+        {/* Plausible Analytics */}
+        {env.isProduction && (
+          <script
+            defer
+            data-domain="azero.domains"
+            src="https://plausible.io/js/plausible.js"
+          ></script>
+        )}
+
         {/* Favicon */}
         <link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png" />

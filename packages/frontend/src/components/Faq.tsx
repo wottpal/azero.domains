@@ -14,7 +14,7 @@ export const Faq: FC<PropsWithChildren> = ({ children }) => {
         <div className="mt-12 lg:col-span-2 lg:mt-0">
           <dl className="space-y-12">
             <div>
-              <dt className="text-lg font-medium leading-6 text-primary">1. Get a Wallets</dt>
+              <dt className="text-lg font-medium leading-6 text-primary">1. Get a Wallet</dt>
               <dd className="mt-2 text-base">
                 Install the{' '}
                 <a

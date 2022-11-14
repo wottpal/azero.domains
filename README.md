@@ -1,6 +1,10 @@
-# azero.domains – Domain Nameservice for Aleph Zero
+# azero.domains – Domain Nameservice for Aleph Zero (Hackathon)
 
 This is a hackathon project built at ETHWarsaw by [@dennis_zoma](https://twitter.com/dennis_zoma), [@mike1third](https://twitter.com/mike1third), [@cryptoneur_eth](https://twitter.com/cryptoneur_eth), and [@atris_eth](https://twitter.com/atris_eth).
+
+The repository is archived and the mainnet version will be open-sourced on launch.
+
+---
 
 ## Getting Started
 
